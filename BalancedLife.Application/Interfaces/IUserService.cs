@@ -2,7 +2,8 @@
 
 namespace BalancedLife.Application.interfaces {
     public interface IUserService {
-        Task<UserInfoDTO> Login(string email, string password);
-        Task<UserInfoDTO> Register(RegisterUserDTO user);
+        Task<UserInfoDTO> Login(string cpf, string password);
+        Task<UserInfoDTO> Add(UserDTO user);
+        Task<UserInfoDTO> Update(int id, UserDTO user);
     }
 }

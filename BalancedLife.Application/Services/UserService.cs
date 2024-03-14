@@ -14,18 +14,28 @@ namespace BalancedLife.Application.services {
             _mapper = mapper;
         }
 
-        public async Task<UserInfoDTO> Login(string email, string password) {
-            var user = await _userRepository.GetByEmail(email);
+        public async Task<UserInfoDTO> Login(string cpf, string password) {
+            var user = await _userRepository.GetByCpf(cpf);
 
-            if ( user.VerifyPassword(password, user.Password) )
+            if ( user != null && user.VerifyPassword(password, user.Password) )
                 return _mapper.Map<UserInfoDTO>(user);
 
             return null;
         }
 
-        public async Task<UserInfoDTO> Register(RegisterUserDTO user) {
-            var userRegister = await _userRepository.Add(_mapper.Map<UserInfo>(user));
-            return _mapper.Map<UserInfoDTO>(userRegister);
+        public async Task<UserInfoDTO> Add(UserDTO user) {
+            user.IsCompleteProfile = (user.Password != null);
+
+            return _mapper.Map<UserInfoDTO>(await _userRepository.Add(_mapper.Map<UserInfo>(user)));
+        }
+
+        public async Task<UserInfoDTO> Update(int id, UserDTO user) {
+            user.IsCompleteProfile = (user.Password != null);
+
+            var userInfo = _mapper.Map<UserInfo>(user);
+            userInfo.Id = id;
+
+            return _mapper.Map<UserInfoDTO>(await _userRepository.Update(userInfo));
         }
     }
 }

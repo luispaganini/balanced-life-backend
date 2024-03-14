@@ -36,6 +36,8 @@ namespace BalancedLife.Application.DTOs {
         public string Whatsapp { get; set; }
 
         public DateTime? ExpirationLicence { get; set; }
+        public bool IsCompleteProfile { get; set; }
+        public string District { get; set; }
     }
 
 }

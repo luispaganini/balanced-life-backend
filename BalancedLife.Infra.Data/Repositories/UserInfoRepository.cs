@@ -17,6 +17,10 @@ namespace BalancedLife.Infra.Data.Repositories {
             return user;
         }
 
+        public async Task<UserInfo> GetByCpf(string cpf) {
+            return await _context.UserInfos.FirstOrDefaultAsync(u => u.Cpf == cpf);
+        }
+
         public async Task<UserInfo> GetByEmail(string email) {
             return await _context.UserInfos.FirstOrDefaultAsync(u => u.Email == email);
         }

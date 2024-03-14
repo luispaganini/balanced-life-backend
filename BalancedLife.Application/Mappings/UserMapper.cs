@@ -6,7 +6,7 @@ namespace BalancedLife.Application.Mappings {
     public class UserMapper : Profile {
         public UserMapper() {
             CreateMap<UserInfo, UserInfoDTO>().ReverseMap();
-            CreateMap<RegisterUserDTO, UserInfo>().ReverseMap();
+            CreateMap<UserDTO, UserInfo>().ReverseMap();
         }
     }
 }

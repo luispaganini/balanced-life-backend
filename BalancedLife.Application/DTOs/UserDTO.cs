@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace BalancedLife.Application.DTOs {
-    public class RegisterUserDTO {
+    public class UserDTO {
         [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         public string Name { get; set; }
 
@@ -9,7 +9,6 @@ namespace BalancedLife.Application.DTOs {
         [DataType(DataType.Date, ErrorMessage = "Formato de data inválido.")]
         public DateTime Birth { get; set; }
 
-        [Required(ErrorMessage = "O campo Senha é obrigatório.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "O campo Email é obrigatório.")]
@@ -53,5 +52,8 @@ namespace BalancedLife.Application.DTOs {
 
         [DataType(DataType.Date, ErrorMessage = "Formato de data inválido.")]
         public DateTime? ExpirationLicence { get; set; }
+        public bool IsCompleteProfile { get; set; }
+        [Required(ErrorMessage = "O campo bairro é obrigatório.")]
+        public string District { get; set; }
     }
 }

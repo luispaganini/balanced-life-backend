@@ -279,6 +279,10 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("cpf");
+            entity.Property(e => e.District)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("district");
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasMaxLength(255)
@@ -297,6 +301,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("instagram");
+            entity.Property(e => e.IsCompleteProfile).HasColumnName("isCompleteProfile");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255)
@@ -304,8 +309,8 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.Number).HasColumnName("number");
             entity.Property(e => e.Password)
-                .IsRequired()
-                .HasColumnType("text")
+                .HasMaxLength(255)
+                .IsUnicode(false)
                 .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(255)

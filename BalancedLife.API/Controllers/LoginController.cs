@@ -24,22 +24,17 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request) {
-            var result = await _userService.Login(request.Email, request.Password);
+        public async Task<IActionResult> Login([FromBody] LoginDTO request) {
+            try {
+                var result = await _userService.Login(request.Cpf, request.Password);
 
-            if ( result != null) 
-                return Ok(GenerateToken(result));
+                if ( result != null) 
+                    return Ok(GenerateToken(result));
             
-            return Unauthorized();
-        }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDTO user) {
-            var result = await _userService.Register(user);
-            if ( result != null )
-                return CreatedAtAction("Register", result);
-
-            return BadRequest();
+                return Unauthorized();
+            } catch (Exception ex) {
+                return StatusCode(500, $"Erro interno: {new { message = ex.Message }}");
+            }
         }
 
         private object GenerateToken(UserInfoDTO user) {

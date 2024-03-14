@@ -39,6 +39,8 @@ public partial class UserInfo
     public string? Whatsapp { get; set; }
 
     public DateTime? ExpirationLicence { get; set; }
+    public bool IsCompleteProfile { get; set; }
+    public string District { get; set; }
 
     public virtual ICollection<Body> Bodies { get; set; } = new List<Body>();
 
