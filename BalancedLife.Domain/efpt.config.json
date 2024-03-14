@@ -1,0 +1,94 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "ApplicationDbContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Entities",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "BalancedLife.Domain",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 2,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[body]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[city]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[food]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[itemsPlan]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[planDiet]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[snack]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[state]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[status]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[statusUser]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[typeSnack]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[unitMeasurement]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[userInfo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[userLevel]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "luisfernando\\mssqlserver02.Balanced_Life.dbo",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
