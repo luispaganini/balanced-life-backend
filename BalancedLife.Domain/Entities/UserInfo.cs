@@ -3,18 +3,17 @@ using System.Text;
 using System.Security.Cryptography;
 namespace BalancedLife.Domain.Entities;
 
-public partial class UserInfo
-{
+public partial class UserInfo {
     public long Id { get; set; }
 
     public string Name { get; set; }
 
     public DateTime Birth { get; set; }
 
-    public string Password { get; set; }
+    public string? Password { get; set; }
     public string Email { get; set; }
 
-    public string UrlImage { get; set; }
+    public string? UrlImage { get; set; }
 
     public string Sex { get; set; }
 

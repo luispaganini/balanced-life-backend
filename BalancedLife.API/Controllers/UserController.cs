@@ -13,6 +13,21 @@ namespace BalancedLife.API.Controllers {
             _userService = userService;
         }
 
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserById(int id) {
+            try {
+                try {
+                    var result = await _userService.GetUserById(id);
+
+                    return Ok(result);
+                } catch ( DbUpdateConcurrencyException ex ) {
+                    return BadRequest(new { message = "Não foi possível encontrar o usuário, por favor verifique os dados!" });
+                }
+            } catch ( Exception ex ) {
+                return StatusCode(500, new { message = $"Erro interno: {ex.Message}" });
+            }
+        }
+
         [HttpPost("user")]
         public async Task<IActionResult> Register([FromBody] UserDTO user) {
             try {

@@ -26,7 +26,11 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<UserInfo> GetById(long id) {
-            return await _context.UserInfos.FirstOrDefaultAsync(u => u.Id == id);
+            var userinfo = await _context.UserInfos.FirstOrDefaultAsync(u => u.Id == id);
+            if ( userinfo == null )
+                return null;
+
+            return userinfo;
         }
 
         public async Task<UserInfo> Update(UserInfo user) {

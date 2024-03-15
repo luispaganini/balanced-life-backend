@@ -23,5 +23,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseExceptionHandler("/error");
+//Error Treatment
+app.Map("/error", (HttpContext http) => {
+    return Results.Problem(title: "Internal Server Error", statusCode: 500);
+});
 
 app.Run();

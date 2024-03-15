@@ -37,5 +37,9 @@ namespace BalancedLife.Application.services {
 
             return _mapper.Map<UserInfoDTO>(await _userRepository.Update(userInfo));
         }
+
+        public async Task<UserInfoDTO> GetUserById(int id) {
+            return _mapper.Map<UserInfoDTO>(await _userRepository.GetById(id));
+        }
     }
 }

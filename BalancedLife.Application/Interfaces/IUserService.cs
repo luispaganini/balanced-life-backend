@@ -5,5 +5,6 @@ namespace BalancedLife.Application.interfaces {
         Task<UserInfoDTO> Login(string cpf, string password);
         Task<UserInfoDTO> Add(UserDTO user);
         Task<UserInfoDTO> Update(int id, UserDTO user);
+        Task<UserInfoDTO> GetUserById(int id);
     }
 }
