@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace BalancedLife.Domain.Entities;
 
-public partial class UnitMeasurement
+public partial class FoodGroup
 {
     public long Id { get; set; }
 
     public string Name { get; set; }
 
-    public virtual ICollection<FoodNutritionInfo> FoodNutritionInfos { get; set; } = new List<FoodNutritionInfo>();
+    public virtual ICollection<Food> Foods { get; set; } = new List<Food>();
 }

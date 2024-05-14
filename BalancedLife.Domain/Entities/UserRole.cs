@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BalancedLife.Domain.Entities;
 
-public partial class UserLevel
+public partial class UserRole
 {
     public long Id { get; set; }
 

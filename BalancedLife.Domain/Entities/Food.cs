@@ -13,15 +13,15 @@ public partial class Food
 
     public double Quantity { get; set; }
 
-    public long IdUnitMeasurement { get; set; }
+    public long? IdFoodNutritionInfo { get; set; }
 
-    public double Carb { get; set; }
+    public long? IdFoodGroup { get; set; }
 
-    public double Protein { get; set; }
+    public string ReferenceTable { get; set; }
 
-    public double Fat { get; set; }
+    public virtual FoodGroup IdFoodGroupNavigation { get; set; }
 
-    public virtual UnitMeasurement IdUnitMeasurementNavigation { get; set; }
+    public virtual FoodNutritionInfo IdFoodNutritionInfoNavigation { get; set; }
 
     public virtual ICollection<ItemsPlan> ItemsPlans { get; set; } = new List<ItemsPlan>();
 

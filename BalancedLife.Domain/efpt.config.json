@@ -28,6 +28,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[foodGroup]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[foodNutritionInfo]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[itemsPlan]",
          "ObjectType": 0
       },
@@ -64,7 +72,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[userLevel]",
+         "Name": "[dbo].[userRole]",
          "ObjectType": 0
       }
    ],
