@@ -5,15 +5,11 @@ using System.Collections.Generic;
 
 namespace BalancedLife.Domain.Entities;
 
-public partial class State
+public partial class NutritionalComposition
 {
     public long Id { get; set; }
 
-    public string Name { get; set; }
+    public string Item { get; set; }
 
-    public string Country { get; set; }
-
-    public string Uf { get; set; }
-
-    public virtual ICollection<City> Cities { get; set; } = new List<City>();
+    public virtual ICollection<FoodNutritionInfo> FoodNutritionInfos { get; set; } = new List<FoodNutritionInfo>();
 }

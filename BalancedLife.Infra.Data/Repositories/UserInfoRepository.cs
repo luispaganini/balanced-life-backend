@@ -18,17 +18,25 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<UserInfo> GetByCpf(string cpf) {
-            return await _context.UserInfos.FirstOrDefaultAsync(u => u.Cpf == cpf);
+            return await _context.UserInfos
+                .Include(u => u.IdUserRoleNavigation)
+                .Include(u => u.IdCityNavigation)
+                    .ThenInclude(c => c.IdStateNavigation)
+                .FirstOrDefaultAsync(u => u.Cpf == cpf);
         }
 
         public async Task<UserInfo> GetByEmail(string email) {
-            return await _context.UserInfos.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.UserInfos
+                .Include(u => u.IdUserRoleNavigation)
+                .Include(u => u.IdCityNavigation)
+                    .ThenInclude(c => c.IdStateNavigation)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<UserInfo> GetById(long id) {
-            var userinfo = await _context.UserInfos.FirstOrDefaultAsync(u => u.Id == id);
-            if ( userinfo == null )
-                return null;
+            var userinfo = await _context.UserInfos
+                .Include(u => u.IdUserRoleNavigation)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             return userinfo;
         }

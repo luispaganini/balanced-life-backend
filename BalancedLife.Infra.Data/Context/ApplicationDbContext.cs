@@ -24,6 +24,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<ItemsPlan> ItemsPlans { get; set; }
 
+    public virtual DbSet<NutritionalComposition> NutritionalCompositions { get; set; }
+
     public virtual DbSet<PlanDiet> PlanDiets { get; set; }
 
     public virtual DbSet<Snack> Snacks { get; set; }
@@ -91,26 +93,24 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("food");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Brand)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("brand");
             entity.Property(e => e.IdFoodGroup).HasColumnName("idFoodGroup");
-            entity.Property(e => e.IdFoodNutritionInfo).HasColumnName("idFoodNutritionInfo");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.ReferenceTable)
-                .HasMaxLength(1)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("referenceTable");
 
             entity.HasOne(d => d.IdFoodGroupNavigation).WithMany(p => p.Foods)
                 .HasForeignKey(d => d.IdFoodGroup)
                 .HasConstraintName("food_idfoodgroup_foreign");
-
-            entity.HasOne(d => d.IdFoodNutritionInfoNavigation).WithMany(p => p.Foods)
-                .HasForeignKey(d => d.IdFoodNutritionInfo)
-                .HasConstraintName("food_idfoodnutritioninfo_foreign");
         });
 
         modelBuilder.Entity<FoodGroup>(entity =>
@@ -133,44 +133,18 @@ public partial class ApplicationDbContext : DbContext
             entity.ToTable("foodNutritionInfo");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddedSalt).HasColumnName("addedSalt");
-            entity.Property(e => e.AddedSugar).HasColumnName("addedSugar");
-            entity.Property(e => e.Alcohol).HasColumnName("alcohol");
-            entity.Property(e => e.Ash).HasColumnName("ash");
-            entity.Property(e => e.Calcium).HasColumnName("calcium");
-            entity.Property(e => e.Carb).HasColumnName("carb");
-            entity.Property(e => e.CarbTotal).HasColumnName("carbTotal");
-            entity.Property(e => e.Cholesterol).HasColumnName("cholesterol");
-            entity.Property(e => e.Copper).HasColumnName("copper");
-            entity.Property(e => e.Fiber).HasColumnName("fiber");
-            entity.Property(e => e.Folate).HasColumnName("folate");
-            entity.Property(e => e.IdNutritionInfo).HasColumnName("idNutritionInfo");
+            entity.Property(e => e.IdFood).HasColumnName("idFood");
+            entity.Property(e => e.IdNutritionalComposition).HasColumnName("idNutritionalComposition");
             entity.Property(e => e.IdUnitMeasurement).HasColumnName("idUnitMeasurement");
-            entity.Property(e => e.Iron).HasColumnName("iron");
-            entity.Property(e => e.Lipids).HasColumnName("lipids");
-            entity.Property(e => e.Magnesium).HasColumnName("magnesium");
-            entity.Property(e => e.Manganese).HasColumnName("manganese");
-            entity.Property(e => e.Moisture).HasColumnName("moisture");
-            entity.Property(e => e.Niacin).HasColumnName("niacin");
-            entity.Property(e => e.Phosphor).HasColumnName("phosphor");
-            entity.Property(e => e.Potassium).HasColumnName("potassium");
-            entity.Property(e => e.Proteins).HasColumnName("proteins");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.Riboflavin).HasColumnName("riboflavin");
-            entity.Property(e => e.Selenium).HasColumnName("selenium");
-            entity.Property(e => e.Sodium).HasColumnName("sodium");
-            entity.Property(e => e.Thiamine).HasColumnName("thiamine");
-            entity.Property(e => e.TotalMonounsaturedFatty).HasColumnName("totalMonounsaturedFatty");
-            entity.Property(e => e.TotalPolyunsaturedFatty).HasColumnName("totalPolyunsaturedFatty");
-            entity.Property(e => e.TotalSaturedFatty).HasColumnName("totalSaturedFatty");
-            entity.Property(e => e.TransFatty).HasColumnName("transFatty");
-            entity.Property(e => e.VitaminA).HasColumnName("vitaminA");
-            entity.Property(e => e.VitaminB12).HasColumnName("vitaminB12");
-            entity.Property(e => e.VitaminB6).HasColumnName("vitaminB6");
-            entity.Property(e => e.VitaminC).HasColumnName("vitaminC");
-            entity.Property(e => e.VitaminD).HasColumnName("vitaminD");
-            entity.Property(e => e.VitaminE).HasColumnName("vitaminE");
-            entity.Property(e => e.Zinc).HasColumnName("zinc");
+
+            entity.HasOne(d => d.IdFoodNavigation).WithMany(p => p.FoodNutritionInfos)
+                .HasForeignKey(d => d.IdFood)
+                .HasConstraintName("foodNutritionInfo_idfood_foreign");
+
+            entity.HasOne(d => d.IdNutritionalCompositionNavigation).WithMany(p => p.FoodNutritionInfos)
+                .HasForeignKey(d => d.IdNutritionalComposition)
+                .HasConstraintName("foodNutritionInfo_nutritionalComposition_foreign");
 
             entity.HasOne(d => d.IdUnitMeasurementNavigation).WithMany(p => p.FoodNutritionInfos)
                 .HasForeignKey(d => d.IdUnitMeasurement)
@@ -198,6 +172,19 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.IdPlan)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("itemsplan_idplan_foreign");
+        });
+
+        modelBuilder.Entity<NutritionalComposition>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__nutritio__3213E83FB0FE6D4E");
+
+            entity.ToTable("nutritionalComposition");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Item)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("item");
         });
 
         modelBuilder.Entity<PlanDiet>(entity =>
@@ -267,6 +254,10 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("name");
+            entity.Property(e => e.Uf)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("uf");
         });
 
         modelBuilder.Entity<Status>(entity =>
@@ -367,6 +358,11 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("facebook");
+            entity.Property(e => e.Gender)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("gender");
             entity.Property(e => e.IdCity).HasColumnName("idCity");
             entity.Property(e => e.IdUserRole).HasColumnName("idUserRole");
             entity.Property(e => e.Instagram)
@@ -385,16 +381,11 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
+                .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("phoneNumber");
-            entity.Property(e => e.Sex)
-                .IsRequired()
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("sex");
             entity.Property(e => e.Street)
-                .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("street");
@@ -407,19 +398,16 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("whatsapp");
             entity.Property(e => e.ZipCode)
-                .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("zipCode");
 
             entity.HasOne(d => d.IdCityNavigation).WithMany(p => p.UserInfos)
                 .HasForeignKey(d => d.IdCity)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("user_idcity_foreign");
 
             entity.HasOne(d => d.IdUserRoleNavigation).WithMany(p => p.UserInfos)
                 .HasForeignKey(d => d.IdUserRole)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("user_iduserlevel_foreign");
         });
 

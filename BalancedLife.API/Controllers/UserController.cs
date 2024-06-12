@@ -40,6 +40,7 @@ namespace BalancedLife.API.Controllers {
                 return StatusCode(500, new { message = $"Erro interno: {ex.Message}" });
             }
         }
+
         [HttpPut("user/{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO user) {
             try {

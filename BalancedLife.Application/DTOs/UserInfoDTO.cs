@@ -8,7 +8,6 @@ namespace BalancedLife.Application.DTOs {
 
         public DateTime Birth { get; set; }
 
-        public string Password { get; set; }
         public string Email { get; set; }
 
         public string UrlImage { get; set; }
@@ -23,9 +22,9 @@ namespace BalancedLife.Application.DTOs {
 
         public string ZipCode { get; set; }
 
-        public long IdCity { get; set; }
+        public LocationDTO Location { get; set; }
 
-        public long IdUserLevel { get; set; }
+        public UserRoleDTO UserRole { get; set; }
 
         public string PhoneNumber { get; set; }
 

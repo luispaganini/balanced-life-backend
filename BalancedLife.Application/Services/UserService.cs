@@ -3,6 +3,7 @@ using BalancedLife.Application.DTOs;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
+using BalancedLife.Domain.Utils;
 
 namespace BalancedLife.Application.services {
     public class UserService : IUserService {
@@ -16,8 +17,7 @@ namespace BalancedLife.Application.services {
 
         public async Task<UserInfoDTO> Login(string cpf, string password) {
             var user = await _userRepository.GetByCpf(cpf);
-
-            if ( user != null && user.VerifyPassword(password, user.Password) )
+            if ( user != null && UserInfoUtils.VerifyPassword(password, user.Password) )
                 return _mapper.Map<UserInfoDTO>(user);
 
             return null;
@@ -40,6 +40,14 @@ namespace BalancedLife.Application.services {
 
         public async Task<UserInfoDTO> GetUserById(int id) {
             return _mapper.Map<UserInfoDTO>(await _userRepository.GetById(id));
+        }
+
+        public async Task<UserInfoDTO> VerifyCPF(string cpf) {
+            var user = await _userRepository.GetByCpf(cpf);
+            if (user != null)
+                return _mapper.Map<UserInfoDTO>(user);
+
+            return null;
         }
     }
 }

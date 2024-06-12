@@ -1,15 +1,10 @@
-﻿using BalancedLife.Application.interfaces;
-using Microsoft.AspNetCore.Identity.Data;
+﻿using BalancedLife.Application.DTOs;
+using BalancedLife.Application.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using BalancedLife.Application.DTOs;
-using BalancedLife.Domain.Entities;
 
 namespace BalancedLife.API.Controllers {
     [Route("api")]
@@ -26,12 +21,25 @@ namespace BalancedLife.API.Controllers {
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO request) {
             try {
+                if (request.Password == null)
+                    return Unauthorized();
+
                 var result = await _userService.Login(request.Cpf, request.Password);
 
                 if ( result != null) 
                     return Ok(GenerateToken(result));
             
                 return Unauthorized();
+            } catch (Exception ex) {
+                return StatusCode(500, $"Erro interno: {new { message = ex.Message }}");
+            }
+        }
+
+        [HttpPost("login/verify")]
+        public async Task<IActionResult> VerifyCPF([FromBody] LoginDTO request) {
+            try {
+                var result = await _userService.VerifyCPF(request.Cpf);
+                return Ok(result);
             } catch (Exception ex) {
                 return StatusCode(500, $"Erro interno: {new { message = ex.Message }}");
             }

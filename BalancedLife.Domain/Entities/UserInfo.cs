@@ -2,9 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace BalancedLife.Domain.Entities;
 
@@ -14,7 +11,7 @@ public partial class UserInfo
 
     public string Name { get; set; }
 
-    public DateTime Birth { get; set; }
+    public DateOnly Birth { get; set; }
 
     public string Email { get; set; }
 
@@ -22,19 +19,19 @@ public partial class UserInfo
 
     public string UrlImage { get; set; }
 
-    public string Sex { get; set; }
+    public string Gender { get; set; }
 
     public string Cpf { get; set; }
 
     public string Street { get; set; }
 
-    public long Number { get; set; }
+    public long? Number { get; set; }
 
     public string ZipCode { get; set; }
 
-    public long IdCity { get; set; }
+    public long? IdCity { get; set; }
 
-    public long IdUserRole { get; set; }
+    public long? IdUserRole { get; set; }
 
     public string PhoneNumber { get; set; }
 
@@ -46,7 +43,7 @@ public partial class UserInfo
 
     public DateTime? ExpirationLicence { get; set; }
 
-    public bool? IsCompleteProfile { get; set; }
+    public bool IsCompleteProfile { get; set; }
 
     public string District { get; set; }
 
@@ -63,20 +60,4 @@ public partial class UserInfo
     public virtual ICollection<StatusUser> StatusUserIdNutricionistNavigations { get; set; } = new List<StatusUser>();
 
     public virtual ICollection<StatusUser> StatusUserIdUserNavigations { get; set; } = new List<StatusUser>();
-
-    public bool VerifyPassword(string password, string hashedPassword) {
-        return HashPassword(password) == hashedPassword;
-    }
-    private bool isValidPassword(string password) {
-        string pattern = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$";
-
-        return Regex.IsMatch(password, pattern);
-    }
-
-    private string HashPassword(string password) {
-        using ( var sha256 = SHA256.Create() ) {
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
-        }
-    }
 }
