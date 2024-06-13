@@ -1,6 +1,6 @@
 ﻿using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Mappings;
-using BalancedLife.Application.services;
+using BalancedLife.Application.Services;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Infra.Data.Context;
 using BalancedLife.Infra.Data.Repositories;

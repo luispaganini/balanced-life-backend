@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/dbc1063e-b812-4210-a797-6344a152184e/resourceGroups/BalancedLife/providers/Microsoft.Web/sites/balanced-life",
+    "appService.deploySubpath": "BalancedLife.API"
+}

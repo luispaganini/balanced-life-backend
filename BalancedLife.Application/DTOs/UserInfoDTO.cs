@@ -12,7 +12,7 @@ namespace BalancedLife.Application.DTOs {
 
         public string UrlImage { get; set; }
 
-        public string Sex { get; set; }
+        public string Gender { get; set; }
 
         public string Cpf { get; set; }
 

@@ -36,6 +36,8 @@ namespace BalancedLife.Infra.Data.Repositories {
         public async Task<UserInfo> GetById(long id) {
             var userinfo = await _context.UserInfos
                 .Include(u => u.IdUserRoleNavigation)
+                .Include(u => u.IdCityNavigation)
+                    .ThenInclude(c => c.IdStateNavigation)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             return userinfo;

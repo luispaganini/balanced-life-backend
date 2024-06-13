@@ -1,5 +1,6 @@
 ﻿using BalancedLife.Application.DTOs;
 using BalancedLife.Application.interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,6 +19,14 @@ namespace BalancedLife.API.Controllers {
             _configuration = configuration;
         }
 
+        [HttpOptions("login/verify")]
+        public IActionResult Options() {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Response.Headers.Add("Access-Control-Allow-Methods", "POST,OPTIONS");
+            Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+            return Ok();
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO request) {
             try {
@@ -34,7 +43,7 @@ namespace BalancedLife.API.Controllers {
                 return StatusCode(500, $"Erro interno: {new { message = ex.Message }}");
             }
         }
-
+        [EnableCors]
         [HttpPost("login/verify")]
         public async Task<IActionResult> VerifyCPF([FromBody] LoginDTO request) {
             try {

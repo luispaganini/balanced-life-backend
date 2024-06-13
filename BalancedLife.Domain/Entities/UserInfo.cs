@@ -11,7 +11,7 @@ public partial class UserInfo
 
     public string Name { get; set; }
 
-    public DateOnly Birth { get; set; }
+    public DateTime Birth { get; set; }
 
     public string Email { get; set; }
 
