@@ -9,7 +9,7 @@ namespace BalancedLife.Application.DTOs {
         [DataType(DataType.Date, ErrorMessage = "Formato de data inválido.")]
         public DateTime Birth { get; set; }
 
-        [RegularExpression("@\"^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", ErrorMessage = "Formato de senha inválido")]
+        [RegularExpression("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", ErrorMessage = "Formato de senha inválido")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "O campo Email é obrigatório.")]
@@ -19,20 +19,20 @@ namespace BalancedLife.Application.DTOs {
         public string? UrlImage { get; set; }
 
         [Required(ErrorMessage = "O campo Sexo é obrigatório.")]
-        public string Sex { get; set; }
+        public string Gender { get; set; }
 
         [Required(ErrorMessage = "O campo CPF é obrigatório.")]
         [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$", ErrorMessage = "Formato de CPF inválido.")]
         public string Cpf { get; set; }
 
-        public string Street { get; set; }
+        public string? Street { get; set; }
 
-        public long Number { get; set; }
+        public long? Number { get; set; }
 
         [RegularExpression(@"^\d{5}-\d{3}$", ErrorMessage = "Formato de CEP inválido.")]
-        public string ZipCode { get; set; }
+        public string? ZipCode { get; set; }
 
-        public long IdCity { get; set; }
+        public long? IdCity { get; set; }
 
         [Required(ErrorMessage = "O campo ID do Nível do Usuário é obrigatório.")]
         public long IdUserRole { get; set; }
@@ -50,6 +50,6 @@ namespace BalancedLife.Application.DTOs {
         [DataType(DataType.Date, ErrorMessage = "Formato de data inválido.")]
         public DateTime? ExpirationLicence { get; set; }
         public bool IsCompleteProfile { get; set; }
-        public string District { get; set; }
+        public string? District { get; set; }
     }
 }

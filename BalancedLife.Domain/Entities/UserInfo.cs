@@ -55,6 +55,8 @@ public partial class UserInfo
 
     public virtual ICollection<PlanDiet> PlanDiets { get; set; } = new List<PlanDiet>();
 
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
     public virtual ICollection<Snack> Snacks { get; set; } = new List<Snack>();
 
     public virtual ICollection<StatusUser> StatusUserIdNutricionistNavigations { get; set; } = new List<StatusUser>();

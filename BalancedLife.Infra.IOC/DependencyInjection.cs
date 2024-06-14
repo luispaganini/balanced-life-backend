@@ -1,4 +1,5 @@
 ﻿using BalancedLife.Application.interfaces;
+using BalancedLife.Application.Interfaces;
 using BalancedLife.Application.Mappings;
 using BalancedLife.Application.Services;
 using BalancedLife.Domain.Interfaces;
@@ -17,8 +18,10 @@ namespace BalancedLife.Infra.IOC {
 
 
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILoginService, LoginService>();
 
             services.AddAutoMapper(typeof(UserMapper));
 

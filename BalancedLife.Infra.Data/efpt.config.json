@@ -48,6 +48,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[refreshTokens]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[snack]",
          "ObjectType": 0
       },
@@ -80,7 +84,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "luisfernando\\mssqlserver02.Balanced_Life.dbo",
+   "UiHint": "balanced-life.balanced-life.dbo",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
