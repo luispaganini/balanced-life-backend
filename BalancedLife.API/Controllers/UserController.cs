@@ -1,10 +1,8 @@
 ﻿using BalancedLife.Application.DTOs;
 using BalancedLife.Application.interfaces;
-using BalancedLife.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace BalancedLife.API.Controllers {
     [Route("api")]
@@ -16,6 +14,7 @@ namespace BalancedLife.API.Controllers {
             _userService = userService;
         }
 
+        [Authorize]
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUserById(int id) {
             try {
@@ -46,8 +45,9 @@ namespace BalancedLife.API.Controllers {
             }
         }
 
+        [Authorize]
         [HttpPut("user/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO user) {
+        public async Task<IActionResult> UpdateUser(long id, [FromBody] UserDTO user) {
             try {
                 var result = await _userService.Update(id, user);
                 if ( result == null ) {

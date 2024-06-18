@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BalancedLife.Application.DTOs;
 using BalancedLife.Application.interfaces;
-using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
@@ -38,7 +37,7 @@ namespace BalancedLife.Application.Services {
             }
         }
 
-        public async Task<UserInfoDTO> Update(int id, UserDTO user) {
+        public async Task<UserInfoDTO> Update(long id, UserDTO user) {
             try {
                 user.IsCompleteProfile = !string.IsNullOrEmpty(user.Password);
                 var userInfo = _mapper.Map<UserInfo>(user);

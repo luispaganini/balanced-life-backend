@@ -17,9 +17,11 @@ namespace BalancedLife.Infra.IOC {
                                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
 
+            services.AddScoped<IBodyRepository, BodyRepository>();
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
+            services.AddScoped<IBodyService, BodyService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILoginService, LoginService>();
 

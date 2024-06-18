@@ -146,7 +146,7 @@ namespace BalancedLife.API.Controllers {
             }; // Simplesmente cria um UserInfoDTO com o ID do usuário
             var tokens = await GenerateTokensAsync(user);
 
-            return new AuthenticationResultDTO { Success = true, Token = tokens.AccessToken, RefreshToken = tokens.RefreshToken };
+            return new AuthenticationResultDTO { Success = true, AccessToken = tokens.AccessToken, RefreshToken = tokens.RefreshToken };
         }
     }
 }
