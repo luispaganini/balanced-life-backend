@@ -20,11 +20,15 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<SnacksByDay> GetSnacksByDate(DateTime date, int userId) {
-            var snacks = await _context.Snacks
+            var allTypeSnacks = await _context.TypeSnacks.ToListAsync();
+            var userSnacks = await _context.Snacks
                 .Where(s => s.Appointment.Value.Date == date.Date && s.IdUser == userId)
                 .Include(s => s.IdFoodNavigation)
                     .ThenInclude(fn => fn.FoodNutritionInfos)
                         .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
+                .Include(s => s.IdFoodNavigation)
+                    .ThenInclude(fn => fn.FoodNutritionInfos)
+                        .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
                 .Include(s => s.IdTypeSnackNavigation)
                 .ToListAsync();
 
@@ -35,24 +39,31 @@ namespace BalancedLife.Infra.Data.Repositories {
             var others = 0.0;
             var totalCalories = 0.0;
 
-            foreach ( var snack in snacks ) {
-                foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
-                    switch ( nutritionInfo.IdNutritionalCompositionNavigation.Item ) {
-                        case "Carboidrato total":
-                            carbohydrates += nutritionInfo.Quantity ?? 0;
-                            break;
-                        case "Energia":
-                            calories += nutritionInfo.Quantity ?? 0;
-                            break;
-                        case "Colesterol":
-                            colesterol += nutritionInfo.Quantity ?? 0;
-                            break;
-                        case "Proteína":
-                            protein += nutritionInfo.Quantity ?? 0;
-                            break;
-                        default:
-                            others += nutritionInfo.Quantity ?? 0;
-                            break;
+            if ( userSnacks.Any() ) {
+                foreach ( var snack in userSnacks ) {
+                    var quantity = snack.Quantity;
+                    foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
+                        var valuePer100g = nutritionInfo.Quantity ?? 0;
+                        var adjustedValue = (valuePer100g * quantity) / 100 ?? 0;
+
+                        switch ( nutritionInfo.IdNutritionalCompositionNavigation.Item ) {
+                            case "Carboidrato total":
+                                carbohydrates += adjustedValue;
+                                break;
+                            case "Energia":
+                                calories += adjustedValue;
+                                totalCalories += adjustedValue;
+                                break;
+                            case "Colesterol":
+                                colesterol += adjustedValue;
+                                break;
+                            case "Proteína":
+                                protein += adjustedValue;
+                                break;
+                            default:
+                                others += adjustedValue;
+                                break;
+                        }
                     }
                 }
             }
@@ -66,16 +77,20 @@ namespace BalancedLife.Infra.Data.Repositories {
                 Protein = protein,
                 Others = others,
                 TotalCalories = totalCalories,
-                Snacks = snacks.Select(s => new Snacks {
-                    TypeSnacks = s.IdTypeSnackNavigation,
-                    Id = s.Id,
-                    Title = s.IdTypeSnackNavigation.Name,
-                    TotalCalories = s.IdFoodNavigation.FoodNutritionInfos
+                Snacks = allTypeSnacks.Select(ts => {
+                    var userSnack = userSnacks.FirstOrDefault(us => us.IdTypeSnack == ts.Id);
+                    var totalSnackCalories = userSnack?.IdFoodNavigation.FoodNutritionInfos
                         .Where(fni => fni.IdNutritionalCompositionNavigation.Item == "Energia")
-                        .Sum(fni => fni.Quantity ?? 0)
+                        .Sum(fni => (fni.Quantity ?? 0) * (userSnack.Quantity / 100)) ?? 0;
+
+                    return new Snacks {
+                        TypeSnacks = ts,
+                        Id = ts.Id,
+                        Title = ts.Name,
+                        TotalCalories = totalSnackCalories
+                    };
                 }).ToList()
             };
-
             return snacksByDay;
         }
 

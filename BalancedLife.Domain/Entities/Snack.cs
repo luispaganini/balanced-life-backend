@@ -17,6 +17,8 @@ public partial class Snack
 
     public DateTime? Appointment { get; set; }
 
+    public double? Quantity { get; set; }
+
     public virtual Food IdFoodNavigation { get; set; }
 
     public virtual TypeSnack IdTypeSnackNavigation { get; set; }
