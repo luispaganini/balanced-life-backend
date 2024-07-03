@@ -11,17 +11,21 @@ public partial class Snack
 
     public long IdFood { get; set; }
 
-    public long IdUser { get; set; }
-
     public long IdTypeSnack { get; set; }
 
     public DateTime? Appointment { get; set; }
 
     public double? Quantity { get; set; }
 
+    public long? IdMeal { get; set; }
+
+    public long? IdUnitMeasurement { get; set; }
+
     public virtual Food IdFoodNavigation { get; set; }
+
+    public virtual Meal IdMealNavigation { get; set; }
 
     public virtual TypeSnack IdTypeSnackNavigation { get; set; }
 
-    public virtual UserInfo IdUserNavigation { get; set; }
+    public virtual UnitMeasurement IdUnitMeasurementNavigation { get; set; }
 }

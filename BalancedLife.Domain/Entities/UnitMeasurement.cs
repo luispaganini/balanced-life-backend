@@ -12,4 +12,6 @@ public partial class UnitMeasurement
     public string Name { get; set; }
 
     public virtual ICollection<FoodNutritionInfo> FoodNutritionInfos { get; set; } = new List<FoodNutritionInfo>();
+
+    public virtual ICollection<Snack> Snacks { get; set; } = new List<Snack>();
 }

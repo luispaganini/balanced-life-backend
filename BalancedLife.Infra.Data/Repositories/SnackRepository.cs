@@ -2,6 +2,7 @@
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BalancedLife.Infra.Data.Repositories {
     public class SnackRepository : ISnackRepository {
@@ -15,29 +16,46 @@ namespace BalancedLife.Infra.Data.Repositories {
             throw new NotImplementedException();
         }
 
-        public Task<object> GetSnackById(int id) {
-            throw new NotImplementedException();
+        public async Task<Meal> GetMealById(int id) {
+            var meal = await _context.Meals
+                .Include(m => m.Snacks)
+                    .ThenInclude(s => s.IdFoodNavigation)
+                .Include(m => m.Snacks)
+                    .ThenInclude(s => s.IdTypeSnackNavigation)
+                .Include(m => m.Snacks)
+                    .ThenInclude(s => s.IdUnitMeasurementNavigation)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if ( meal != null ) 
+                meal.Snacks = meal.Snacks.Where(s => s.IdTypeSnack == meal.IdTypeSnack).ToList();
+
+            return meal;
         }
 
         public async Task<SnacksByDay> GetSnacksByDate(DateTime date, int userId) {
-            var allTypeSnacks = await _context.TypeSnacks.ToListAsync();
-            var userSnacks = await _context.Snacks
-                .Where(s => s.Appointment.Value.Date == date.Date && s.IdUser == userId)
-                .Include(s => s.IdFoodNavigation)
-                    .ThenInclude(fn => fn.FoodNutritionInfos)
-                        .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
-                .Include(s => s.IdFoodNavigation)
-                    .ThenInclude(fn => fn.FoodNutritionInfos)
-                        .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
-                .Include(s => s.IdTypeSnackNavigation)
-                .ToListAsync();
-
             var carbohydrates = 0.0;
             var calories = 0.0;
             var colesterol = 0.0;
             var protein = 0.0;
             var others = 0.0;
             var totalCalories = 0.0;
+            var allTypeSnacks = await _context.TypeSnacks.ToListAsync();
+
+            var userMeals = await _context.Meals
+                .Where(m => m.IdUser == userId && m.Appointment.Date == date.Date)
+                .ToListAsync();
+
+            var mealIds = userMeals.Select(m => (long?) m.Id);
+
+            var userSnacks = await _context.Snacks
+                .Where(s => mealIds.Contains(s.IdMeal))
+                .Include(s => s.IdFoodNavigation)
+                    .ThenInclude(fn => fn.FoodNutritionInfos)
+                        .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
+                .Include(s => s.IdFoodNavigation)
+                    .ThenInclude(fn => fn.FoodNutritionInfos)
+                        .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
+                .ToListAsync();
 
             if ( userSnacks.Any() ) {
                 foreach ( var snack in userSnacks ) {
@@ -87,7 +105,8 @@ namespace BalancedLife.Infra.Data.Repositories {
                         TypeSnacks = ts,
                         Id = ts.Id,
                         Title = ts.Name,
-                        TotalCalories = totalSnackCalories
+                        TotalCalories = totalSnackCalories,
+                        IdMeal = userSnack?.IdMeal ?? 0,
                     };
                 }).ToList()
             };

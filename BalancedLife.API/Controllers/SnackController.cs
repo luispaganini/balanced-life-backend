@@ -20,7 +20,7 @@ namespace BalancedLife.API.Controllers {
         [HttpGet("snack/{id}")]
         public async Task<IActionResult> GetSnackById(int id) {
             try {
-                var result = await _snackService.GetSnackById(id);
+                var result = await _snackService.GetMealById(id);
                 if ( result == null ) {
                     return NotFound(new { message = "Os dados do lanche não encontrado." });
                 }
@@ -69,7 +69,7 @@ namespace BalancedLife.API.Controllers {
         //}
 
         [HttpPut("snack/{id}")]
-        public async Task<IActionResult> UpdateSnack([FromBody] SnackDTO snack) {
+        public async Task<IActionResult> UpdateSnack([FromBody] MealDTO snack) {
             try {
                 var result = await _snackService.Update(snack);
                 if ( result == null ) {

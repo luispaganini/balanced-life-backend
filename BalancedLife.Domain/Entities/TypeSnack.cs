@@ -11,5 +11,7 @@ public partial class TypeSnack
 
     public string Name { get; set; }
 
+    public virtual ICollection<Meal> Meals { get; set; } = new List<Meal>();
+
     public virtual ICollection<Snack> Snacks { get; set; } = new List<Snack>();
 }

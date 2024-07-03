@@ -13,12 +13,14 @@ namespace BalancedLife.Application.Services {
             _mapper = mapper;
         }
 
-        public Task<SnackDTO> Add(SnackDTO snack) {
+        public Task<MealDTO> Add(MealDTO snack) {
             throw new NotImplementedException();
         }
 
-        public Task<SnackDTO> GetSnackById(int id) {
-            throw new NotImplementedException();
+        public async Task<MealDTO> GetMealById(int id) {
+            var result = await _snackRepository.GetMealById(id);
+
+            return _mapper.Map<MealDTO>(result);
         }
 
         public async Task<SnacksByDayDTO> GetSnacksByDate(DateTime date, int userId) {
@@ -28,7 +30,7 @@ namespace BalancedLife.Application.Services {
 
         }
 
-        public Task<SnackDTO> Update(SnackDTO snack) {
+        public Task<MealDTO> Update(MealDTO snack) {
             throw new NotImplementedException();
         }
     }

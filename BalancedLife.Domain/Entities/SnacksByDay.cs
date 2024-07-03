@@ -1,5 +1,6 @@
 ﻿namespace BalancedLife.Domain.Entities {
     public class SnacksByDay {
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
         public double Carbohydrates { get; set; }
@@ -17,5 +18,6 @@
         public string Title { get; set; }
         public TypeSnack TypeSnacks { get; set; }
         public double TotalCalories { get; set; }
+        public long IdMeal { get; set; }
     }
 }

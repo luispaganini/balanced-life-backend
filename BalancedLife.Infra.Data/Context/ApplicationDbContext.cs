@@ -26,6 +26,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<ItemsPlan> ItemsPlans { get; set; }
 
+    public virtual DbSet<Meal> Meals { get; set; }
+
     public virtual DbSet<NutritionalComposition> NutritionalCompositions { get; set; }
 
     public virtual DbSet<PlanDiet> PlanDiets { get; set; }
@@ -178,6 +180,31 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("itemsplan_idplan_foreign");
         });
 
+        modelBuilder.Entity<Meal>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__meal__3213E83F3114B102");
+
+            entity.ToTable("meal");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Appointment)
+                .HasColumnType("datetime")
+                .HasColumnName("appointment");
+            entity.Property(e => e.IdTypeSnack).HasColumnName("idTypeSnack");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.Observation).HasColumnName("observation");
+            entity.Property(e => e.Status).HasColumnName("status");
+
+            entity.HasOne(d => d.IdTypeSnackNavigation).WithMany(p => p.Meals)
+                .HasForeignKey(d => d.IdTypeSnack)
+                .HasConstraintName("FK_TypeSnack");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Meals)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserInfo");
+        });
+
         modelBuilder.Entity<NutritionalComposition>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__nutritio__3213E83FB0FE6D4E");
@@ -253,23 +280,28 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("appointment");
             entity.Property(e => e.IdFood).HasColumnName("idFood");
+            entity.Property(e => e.IdMeal).HasColumnName("idMeal");
             entity.Property(e => e.IdTypeSnack).HasColumnName("idTypeSnack");
-            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IdUnitMeasurement).HasColumnName("idUnitMeasurement");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
 
             entity.HasOne(d => d.IdFoodNavigation).WithMany(p => p.Snacks)
                 .HasForeignKey(d => d.IdFood)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("snack_idfood_foreign");
 
+            entity.HasOne(d => d.IdMealNavigation).WithMany(p => p.Snacks)
+                .HasForeignKey(d => d.IdMeal)
+                .HasConstraintName("FK_meals");
+
             entity.HasOne(d => d.IdTypeSnackNavigation).WithMany(p => p.Snacks)
                 .HasForeignKey(d => d.IdTypeSnack)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("snack_idtypesnack_foreign");
 
-            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.Snacks)
-                .HasForeignKey(d => d.IdUser)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("snack_iduser_foreign");
+            entity.HasOne(d => d.IdUnitMeasurementNavigation).WithMany(p => p.Snacks)
+                .HasForeignKey(d => d.IdUnitMeasurement)
+                .HasConstraintName("FK_UnitMeasurement");
         });
 
         modelBuilder.Entity<State>(entity =>

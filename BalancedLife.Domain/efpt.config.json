@@ -40,6 +40,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[meal]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[nutritionalComposition]",
          "ObjectType": 0
       },
