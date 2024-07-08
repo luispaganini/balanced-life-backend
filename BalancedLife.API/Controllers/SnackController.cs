@@ -17,14 +17,14 @@ namespace BalancedLife.API.Controllers {
             _snackService = snackService;
         }
 
-        [HttpGet("snack/{id}")]
-        public async Task<IActionResult> GetSnackById(int id) {
+        [HttpGet("meal/{idMeal}/type-snack/{idTypeSnack}")]
+        public async Task<IActionResult> GetMealById(int idMeal, int idTypeSnack) {
             try {
-                var result = await _snackService.GetMealById(id);
-                if ( result == null ) {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                var result = await _snackService.GetMealById(idMeal, idTypeSnack, int.Parse(userId));
+                if ( result == null ) 
                     return NotFound(new { message = "Os dados do lanche não encontrado." });
-                }
-
+                
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
                 return BadRequest(new { message = "Não foi possível encontrar os dados do lanche, por favor verifique os dados!" });
@@ -34,7 +34,7 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpGet("snacks")]
-        public async Task<IActionResult> GetSnacksByDate([FromBody] SnackDateRequest request) {
+        public async Task<IActionResult> GetSnacksByDate([FromQuery] SnackDateRequest request) {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
                 if ( string.IsNullOrEmpty(userId) )

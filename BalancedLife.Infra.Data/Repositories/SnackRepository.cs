@@ -1,5 +1,7 @@
 ﻿using BalancedLife.Domain.Entities;
+using BalancedLife.Domain.Enums;
 using BalancedLife.Domain.Interfaces;
+using BalancedLife.Domain.Utils;
 using BalancedLife.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -12,11 +14,17 @@ namespace BalancedLife.Infra.Data.Repositories {
             _context = context;
         }
 
-        public Task<object> Add(object snack) {
-            throw new NotImplementedException();
+        public async Task<Meal> AddMeal(Meal meal) {
+            if (meal.IdTypeSnackNavigation == null)
+                meal.IdTypeSnackNavigation = await _context.TypeSnacks.FindAsync(meal.IdTypeSnack);
+
+            var result = await _context.Meals.AddAsync(meal);
+            await _context.SaveChangesAsync();
+
+            return result.Entity;
         }
 
-        public async Task<Meal> GetMealById(int id) {
+        public async Task<Meal> GetMealById(int idMeal, int idTypeSnack, int idUser) {
             var meal = await _context.Meals
                 .Include(m => m.Snacks)
                     .ThenInclude(s => s.IdFoodNavigation)
@@ -24,10 +32,22 @@ namespace BalancedLife.Infra.Data.Repositories {
                     .ThenInclude(s => s.IdTypeSnackNavigation)
                 .Include(m => m.Snacks)
                     .ThenInclude(s => s.IdUnitMeasurementNavigation)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == idMeal);
 
-            if ( meal != null ) 
-                meal.Snacks = meal.Snacks.Where(s => s.IdTypeSnack == meal.IdTypeSnack).ToList();
+            if ( meal == null ) {
+                meal = new Meal {
+                    Appointment = DateTime.Now,
+                    IdUser = idUser,
+                    IdTypeSnack = idTypeSnack,
+                    Observation = "",
+                    Status = (int?) StatusMeal.NotAwnsered,
+                    Snacks = new List<Snack>()
+                };
+
+                meal = await AddMeal(meal);
+            } else 
+                meal.Snacks = meal.Snacks.Where(s => s.IdTypeSnack == idTypeSnack).ToList();
+            
 
             return meal;
         }
@@ -45,7 +65,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                 .Where(m => m.IdUser == userId && m.Appointment.Date == date.Date)
                 .ToListAsync();
 
-            var mealIds = userMeals.Select(m => (long?) m.Id);
+            var mealIds = userMeals.Select(m => m.Id);
 
             var userSnacks = await _context.Snacks
                 .Where(s => mealIds.Contains(s.IdMeal))
@@ -62,7 +82,12 @@ namespace BalancedLife.Infra.Data.Repositories {
                     var quantity = snack.Quantity;
                     foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
                         var valuePer100g = nutritionInfo.Quantity ?? 0;
-                        var adjustedValue = (valuePer100g * quantity) / 100 ?? 0;
+                        //var adjustedValue = (valuePer100g * quantity) / 100 ?? 0;
+                        var adjustedValue = SnackUtils.ConvertTo100g(
+                            snack.IdUnitMeasurementNavigation.Name, 
+                            (double) (quantity != null ? quantity : 0), 
+                            valuePer100g
+                         );
 
                         switch ( nutritionInfo.IdNutritionalCompositionNavigation.Item ) {
                             case "Carboidrato total":
@@ -105,7 +130,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                         TypeSnacks = ts,
                         Id = ts.Id,
                         Title = ts.Name,
-                        TotalCalories = totalSnackCalories,
+                        TotalCalories = (double) totalSnackCalories,
                         IdMeal = userSnack?.IdMeal ?? 0,
                     };
                 }).ToList()
@@ -113,8 +138,10 @@ namespace BalancedLife.Infra.Data.Repositories {
             return snacksByDay;
         }
 
-        public Task<object> Update(object snack) {
-            throw new NotImplementedException();
+        public async Task<Meal> UpdateMeal(Meal meal) {
+            var result = _context.Meals.Update(meal);
+            await _context.SaveChangesAsync();
+            return result.Entity;
         }
     }
 }

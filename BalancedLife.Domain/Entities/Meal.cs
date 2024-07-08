@@ -7,7 +7,7 @@ namespace BalancedLife.Domain.Entities;
 
 public partial class Meal
 {
-    public long Id { get; set; }
+    public long? Id { get; set; }
 
     public long IdUser { get; set; }
 
