@@ -17,10 +17,10 @@ namespace BalancedLife.Application.Services {
             throw new NotImplementedException();
         }
 
-        public async Task<MealDTO> GetMealById(int idMeal, int idTypeSnack, int idUser) {
+        public async Task<MealInfoDTO> GetMealById(int idMeal, int idTypeSnack, int idUser) {
             var result = await _snackRepository.GetMealById(idMeal, idTypeSnack, idUser);
 
-            return _mapper.Map<MealDTO>(result);
+            return _mapper.Map<MealInfoDTO>(result);
         }
 
         public async Task<SnacksByDayDTO> GetSnacksByDate(DateTime date, int userId) {
