@@ -28,7 +28,7 @@ namespace BalancedLife.API.Controllers {
             }
         }
 
-        [HttpGet("food/{food}/{pageNumber}")]
+        [HttpGet("food/search/{food}/{pageNumber}")]
         public async Task<IActionResult> FindFoodBySearch(string food, int pageNumber) {
             try {
                 var result = await _foodService.FindFoodBySearch(food, pageNumber);
