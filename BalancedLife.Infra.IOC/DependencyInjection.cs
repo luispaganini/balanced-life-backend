@@ -16,11 +16,13 @@ namespace BalancedLife.Infra.IOC {
                            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), 
                                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
+            services.AddScoped<IFoodRepository, FoodRepository>();
             services.AddScoped<ISnackRepository, SnackRepository>();
             services.AddScoped<IBodyRepository, BodyRepository>();
             services.AddScoped<IUserInfoRepository, UserInfoRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
+            services.AddScoped<IFoodService, FoodService>();
             services.AddScoped<ISnackService, SnackService>();
             services.AddScoped<IBodyService, BodyService>();
             services.AddScoped<IUserService, UserService>();
