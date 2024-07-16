@@ -29,5 +29,16 @@ namespace BalancedLife.Infra.Data.Repositories {
             return foods;
         }
 
+        public async Task<Food> GetFoodById(int id) {
+            var food = await _context.Foods
+                .Include(f => f.FoodNutritionInfos)
+                    .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
+                .Include(f => f.FoodNutritionInfos)
+                    .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
+            return food;
+        }
+
     }
 }

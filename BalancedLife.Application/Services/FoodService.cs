@@ -33,5 +33,14 @@ namespace BalancedLife.Application.Services {
                 throw new ApplicationException("An error occurred while searching for food.", ex);
             }
         }
+
+        public async Task<FoodDTO> GetFoodById(int id) {
+            try {
+                var food = await _foodRepository.GetFoodById(id);
+                return _mapper.Map<FoodDTO>(food);
+            } catch ( Exception ex ) {
+                throw new ApplicationException("An error occurred while getting the food.", ex);
+            }
+        }
     }
 }

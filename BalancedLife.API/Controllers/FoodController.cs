@@ -42,5 +42,18 @@ namespace BalancedLife.API.Controllers {
             }
         }
 
+        [HttpGet("food/{id}")]
+        public async Task<IActionResult> GetFoodById(int id) {
+            try {
+                var result = await _foodService.GetFoodById(id);
+                if ( result == null )
+                    return NotFound(new { message = "Alimento não encontrado." });
+                
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
     }
 }
