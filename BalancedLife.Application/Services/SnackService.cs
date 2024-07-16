@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Application.Interfaces;
+using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 
 namespace BalancedLife.Application.Services {
@@ -13,8 +14,22 @@ namespace BalancedLife.Application.Services {
             _mapper = mapper;
         }
 
-        public Task<MealDTO> Add(MealDTO snack) {
-            throw new NotImplementedException();
+        public async Task<MealDTO> AddMeal(MealDTO snack) {
+            var snackEntity = _mapper.Map<Meal>(snack);
+            var addedSnack = await _snackRepository.AddMeal(snackEntity);
+
+            return _mapper.Map<MealDTO>(addedSnack);
+        }
+
+        public async Task<SnackDTO> AddSnack(SnackDTO snack) {
+            var snackEntity = _mapper.Map<Snack>(snack);
+            var addedSnack = await _snackRepository.AddSnack(snackEntity);
+
+            return _mapper.Map<SnackDTO>(addedSnack);
+        }
+
+        public async Task DeleteSnack(int id) {
+            await _snackRepository.DeleteSnack(id);
         }
 
         public async Task<MealInfoDTO> GetMealById(int idMeal, int idTypeSnack, int idUser) {
@@ -30,8 +45,18 @@ namespace BalancedLife.Application.Services {
 
         }
 
-        public Task<MealDTO> Update(MealDTO snack) {
-            throw new NotImplementedException();
+        public async Task<MealDTO> Update(MealDTO snack) {
+            var snackEntity = _mapper.Map<Meal>(snack);
+            var updatedSnack = await _snackRepository.UpdateMeal(snackEntity);
+
+            return _mapper.Map<MealDTO>(updatedSnack);
+        }
+
+        public async Task<SnackDTO> UpdateSnack(SnackDTO snack) {
+            var snackEntity = _mapper.Map<Snack>(snack);
+            var updatedSnack = await _snackRepository.UpdateSnack(snackEntity);
+
+            return _mapper.Map<SnackDTO>(updatedSnack);
         }
     }
 }

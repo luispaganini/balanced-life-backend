@@ -23,6 +23,20 @@ namespace BalancedLife.Infra.Data.Repositories {
             return result.Entity;
         }
 
+        public async Task<Snack> AddSnack(Snack snack) {
+            var result = await _context.Snacks.AddAsync(snack);
+            await _context.SaveChangesAsync();
+
+            return result.Entity;
+        }
+
+        public async Task DeleteSnack(int id) {
+            var snack = await _context.Snacks.FindAsync(id);
+            _context.Snacks.Remove(snack);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<MealInfo> GetMealById(int idMeal, int idTypeSnack, int idUser) {
             var carbohydrates = 0.0;
             var calories = 0.0;
@@ -162,6 +176,41 @@ namespace BalancedLife.Infra.Data.Repositories {
                 }
             }
 
+            var snacks = new List<Snacks>();
+
+            foreach ( var ts in allTypeSnacks ) {
+                var userSnack = userSnacks.FirstOrDefault(us => us.IdTypeSnack == ts.Id);
+                var totalSnackCalories = userSnack?.IdFoodNavigation.FoodNutritionInfos
+                    .Where(fni => fni.IdNutritionalCompositionNavigation.Item == "Energia")
+                    .Sum(fni => (fni.Quantity ?? 0) *
+                        (SnackUtils.ConvertToGrams((double) userSnack.Quantity, userSnack.IdUnitMeasurementNavigation.Name) / 100)) ?? 0;
+
+                var meal = userMeals
+                    .Where(i => i.Appointment.Date == date.Date)
+                    .FirstOrDefault(m => m.IdTypeSnack == ts.Id);
+
+                if ( meal == null ) {
+                    meal = new MealInfo {
+                        Appointment = DateTime.Now,
+                        IdUser = userId,
+                        IdTypeSnack = ts.Id,
+                        Observation = "",
+                        Status = (int?) StatusMeal.NotAwnsered,
+                        Snacks = new List<Snack>()
+                    };
+
+                    meal = await AddMeal(meal);
+                }
+
+                snacks.Add(new Snacks {
+                    TypeSnacks = ts,
+                    Id = ts.Id,
+                    Title = ts.Name,
+                    TotalCalories = Math.Round((double) totalSnackCalories, 2),
+                    IdMeal = meal?.Id ?? 0,
+                });
+            }
+
             var snacksByDay = new SnacksByDay {
                 Date = date,
                 UserId = userId,
@@ -172,28 +221,23 @@ namespace BalancedLife.Infra.Data.Repositories {
                 Protein = Math.Round(protein, 2),
                 Others = Math.Round(others, 2),
                 TotalCalories = Math.Round(totalCalories, 2),
-                Snacks = allTypeSnacks.Select(ts => {
-                    var userSnack = userSnacks.FirstOrDefault(us => us.IdTypeSnack == ts.Id);
-                    var totalSnackCalories = userSnack?.IdFoodNavigation.FoodNutritionInfos
-                        .Where(fni => fni.IdNutritionalCompositionNavigation.Item == "Energia")
-                        .Sum(fni => (fni.Quantity ?? 0) *
-                            (SnackUtils.ConvertToGrams((double) userSnack.Quantity, userSnack.IdUnitMeasurementNavigation.Name) / 100)) ?? 0;
-
-                    return new Snacks {
-                        TypeSnacks = ts,
-                        Id = ts.Id,
-                        Title = ts.Name,
-                        TotalCalories = Math.Round((double) totalSnackCalories, 2),
-                        IdMeal = userSnack?.IdMeal ?? 0,
-                    };
-                }).ToList()
+                Snacks = snacks
             };
+
             return snacksByDay;
         }
 
         public async Task<Meal> UpdateMeal(Meal meal) {
             var result = _context.Meals.Update(meal);
             await _context.SaveChangesAsync();
+
+            return result.Entity;
+        }
+
+        public async Task<Snack> UpdateSnack(Snack snack) {
+            var result = _context.Snacks.Update(snack);
+            await _context.SaveChangesAsync();
+
             return result.Entity;
         }
     }

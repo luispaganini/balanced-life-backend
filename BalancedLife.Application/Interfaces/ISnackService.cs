@@ -2,9 +2,13 @@
 
 namespace BalancedLife.Application.Interfaces {
     public interface ISnackService {
-        public Task<MealInfoDTO> GetMealById(int idMeal, int idTypeSnack, int idUser);
-        public Task<SnacksByDayDTO> GetSnacksByDate(DateTime date, int userId);
-        public Task<MealDTO> Add(MealDTO snack);
-        public Task<MealDTO> Update(MealDTO snack);
+        Task<MealInfoDTO> GetMealById(int idMeal, int idTypeSnack, int idUser);
+        Task<SnacksByDayDTO> GetSnacksByDate(DateTime date, int userId);
+        Task<MealDTO> AddMeal(MealDTO snack);
+        Task<MealDTO> Update(MealDTO snack);
+        Task<SnackDTO> AddSnack(SnackDTO snack);
+        Task<SnackDTO> UpdateSnack(SnackDTO snack);
+        Task DeleteSnack(int id);
+
     }
 }
