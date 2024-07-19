@@ -21,14 +21,14 @@ namespace BalancedLife.Application.Services {
             return _mapper.Map<MealDTO>(addedSnack);
         }
 
-        public async Task<SnackDTO> AddSnack(SnackDTO snack) {
+        public async Task<SnackDTO> AddSnack(SnackFullDTO snack) {
             var snackEntity = _mapper.Map<Snack>(snack);
             var addedSnack = await _snackRepository.AddSnack(snackEntity);
 
             return _mapper.Map<SnackDTO>(addedSnack);
         }
 
-        public async Task DeleteSnack(int id) {
+        public async Task DeleteSnack(long id) {
             await _snackRepository.DeleteSnack(id);
         }
 
@@ -45,14 +45,14 @@ namespace BalancedLife.Application.Services {
 
         }
 
-        public async Task<MealDTO> Update(MealDTO snack) {
+        public async Task<MealDTO> UpdateMeal(MealDTO snack) {
             var snackEntity = _mapper.Map<Meal>(snack);
             var updatedSnack = await _snackRepository.UpdateMeal(snackEntity);
 
             return _mapper.Map<MealDTO>(updatedSnack);
         }
 
-        public async Task<SnackDTO> UpdateSnack(SnackDTO snack) {
+        public async Task<SnackDTO> UpdateSnack(SnackFullDTO snack) {
             var snackEntity = _mapper.Map<Snack>(snack);
             var updatedSnack = await _snackRepository.UpdateSnack(snackEntity);
 

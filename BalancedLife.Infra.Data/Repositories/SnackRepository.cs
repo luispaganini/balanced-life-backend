@@ -3,6 +3,7 @@ using BalancedLife.Domain.Enums;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
 using BalancedLife.Infra.Data.Context;
+using BalancedLife.Infra.Data.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BalancedLife.Infra.Data.Repositories {
@@ -14,8 +15,7 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<Meal> AddMeal(Meal meal) {
-            if (meal.IdTypeSnackNavigation == null)
-                meal.IdTypeSnackNavigation = await _context.TypeSnacks.FindAsync(meal.IdTypeSnack);
+            await EntityHelper.LoadNavigationPropertyAsync(meal, s => s.IdTypeSnackNavigation, meal.IdTypeSnack, _context.TypeSnacks);
 
             var result = await _context.Meals.AddAsync(meal);
             await _context.SaveChangesAsync();
@@ -24,13 +24,18 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<Snack> AddSnack(Snack snack) {
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdFoodNavigation, snack.IdFood, _context.Foods);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdUnitMeasurementNavigation, snack.IdUnitMeasurement, _context.UnitMeasurements);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdMealNavigation, snack.IdMeal, _context.Meals);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdTypeSnackNavigation, snack.IdTypeSnack, _context.TypeSnacks);
+
             var result = await _context.Snacks.AddAsync(snack);
             await _context.SaveChangesAsync();
 
             return result.Entity;
         }
 
-        public async Task DeleteSnack(int id) {
+        public async Task DeleteSnack(long id) {
             var snack = await _context.Snacks.FindAsync(id);
             _context.Snacks.Remove(snack);
 
@@ -235,6 +240,11 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
         public async Task<Snack> UpdateSnack(Snack snack) {
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdFoodNavigation, snack.IdFood, _context.Foods);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdUnitMeasurementNavigation, snack.IdUnitMeasurement, _context.UnitMeasurements);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdMealNavigation, snack.IdMeal, _context.Meals);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdTypeSnackNavigation, snack.IdTypeSnack, _context.TypeSnacks);
+
             var result = _context.Snacks.Update(snack);
             await _context.SaveChangesAsync();
 

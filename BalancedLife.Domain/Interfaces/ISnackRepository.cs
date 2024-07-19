@@ -8,6 +8,6 @@ namespace BalancedLife.Domain.Interfaces {
         Task<Meal> UpdateMeal(Meal meal);
         Task<Snack> AddSnack(Snack snack);
         Task<Snack> UpdateSnack(Snack snack);
-        Task DeleteSnack(int id);
+        Task DeleteSnack(long id);
     }
 }

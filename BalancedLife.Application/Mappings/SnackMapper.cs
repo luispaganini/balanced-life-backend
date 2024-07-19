@@ -46,6 +46,15 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.TotalCalories, opt => opt.MapFrom(src => src.TotalCalories));
+
+            CreateMap<SnackFullDTO, Snack>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.IdFood, opt => opt.MapFrom(src => src.IdFood))
+                .ForMember(dest => dest.IdTypeSnack, opt => opt.MapFrom(src => src.IdTypeSnack))
+                .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+                .ForMember(dest => dest.IdMeal, opt => opt.MapFrom(src => src.IdMeal))
+                .ForMember(dest => dest.IdUnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurement));   
         }
     }
 }

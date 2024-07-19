@@ -54,32 +54,17 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpPost("snack")]
-        public async Task<IActionResult> AddSnack([FromBody] SnackDTO snack) {
+        public async Task<IActionResult> AddSnack([FromBody] SnackFullDTO snack) {
             try {
                 var result = await _snackService.AddSnack(snack);
-                return Ok(result);
+                return CreatedAtAction(nameof(AddSnack), result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
         }
 
-        [HttpPut("snack")]
-        public async Task<IActionResult> UpdateSnack([FromBody] SnackDTO snack) {
-            try {
-                var result = await _snackService.UpdateSnack(snack);
-                if ( result == null ) {
-                    return NotFound(new { message = "Lanche não encontrado." });
-                }
-
-                return Ok(result);
-            } catch ( DbUpdateConcurrencyException ) {
-                return BadRequest(new { message = "Não foi possível atualizar os dados do lanche, por favor verifique os dados!" });
-            } catch ( Exception ex ) {
-                return BadRequest(new { message = $"{ex.Message}" });
-            }
-        }
         [HttpDelete("snack/{id}")]
-        public async Task<IActionResult> DeleteSnack(int id) {
+        public async Task<IActionResult> DeleteSnack(long id) {
             try {
                 await _snackService.DeleteSnack(id);
                 return Ok();
@@ -89,9 +74,10 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpPut("snack/{id}")]
-        public async Task<IActionResult> UpdateSnack([FromBody] MealDTO snack) {
+        public async Task<IActionResult> UpdateSnack([FromBody] SnackFullDTO snack, int id) {
             try {
-                var result = await _snackService.Update(snack);
+                snack.Id = id;
+                var result = await _snackService.UpdateSnack(snack);
                 if ( result == null ) {
                     return NotFound(new { message = "Lanche não encontrado." });
                 }

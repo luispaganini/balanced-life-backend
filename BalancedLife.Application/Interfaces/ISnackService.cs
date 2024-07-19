@@ -5,10 +5,10 @@ namespace BalancedLife.Application.Interfaces {
         Task<MealInfoDTO> GetMealById(int idMeal, int idTypeSnack, int idUser);
         Task<SnacksByDayDTO> GetSnacksByDate(DateTime date, int userId);
         Task<MealDTO> AddMeal(MealDTO snack);
-        Task<MealDTO> Update(MealDTO snack);
-        Task<SnackDTO> AddSnack(SnackDTO snack);
-        Task<SnackDTO> UpdateSnack(SnackDTO snack);
-        Task DeleteSnack(int id);
+        Task<MealDTO> UpdateMeal(MealDTO snack);
+        Task<SnackDTO> AddSnack(SnackFullDTO snack);
+        Task<SnackDTO> UpdateSnack(SnackFullDTO snack);
+        Task DeleteSnack(long id);
 
     }
 }
