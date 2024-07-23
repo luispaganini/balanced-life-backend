@@ -88,7 +88,19 @@ namespace BalancedLife.API.Controllers {
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
-        }   
+        }
 
+        [HttpPut("meal/status/{id}")]
+        public async Task<IActionResult> UpdateMealStatus([FromBody] MealStatusDTO mealStatus, long id) {
+            try {
+                await _snackService.UpdateMealStatus(id, mealStatus);
+
+                return Ok();
+            } catch ( DbUpdateConcurrencyException ) {
+                return BadRequest(new { message = "Não foi possível atualizar os dados do lanche, por favor verifique os dados!" });
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
     }
 }

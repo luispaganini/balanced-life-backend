@@ -239,6 +239,15 @@ namespace BalancedLife.Infra.Data.Repositories {
             return result.Entity;
         }
 
+        public async Task UpdateMealStatus(long idMeal, MealStatus mealStatus) {
+            var meal = _context.Meals.Find(idMeal);
+            meal.Status = (int?) mealStatus.Status;
+            meal.Observation = mealStatus.Observation;
+
+            _context.Meals.Update(meal);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Snack> UpdateSnack(Snack snack) {
             await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdFoodNavigation, snack.IdFood, _context.Foods);
             await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdUnitMeasurementNavigation, snack.IdUnitMeasurement, _context.UnitMeasurements);
