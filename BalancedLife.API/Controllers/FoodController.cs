@@ -55,5 +55,31 @@ namespace BalancedLife.API.Controllers {
             }
         }
 
+        [HttpGet("food/unit-measurement")]
+        public async Task<IActionResult> GetUnitMeasurement() {
+            try {
+                var result = await _foodService.GetUnitsMeasurement();
+                if ( result == null )
+                    return NotFound(new { message = "Unidades de medida não encontradas." });
+                
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [HttpGet("food/nutritional-composition")]
+        public async Task<IActionResult> GetNutritionalComposition() {
+            try {
+                var result = await _foodService.GetNutritionalCompositions();
+                if ( result == null )
+                    return NotFound(new { message = "Composições nutricionais não encontradas." });
+                
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
     }
 }

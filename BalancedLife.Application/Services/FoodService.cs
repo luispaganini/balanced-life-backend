@@ -42,5 +42,23 @@ namespace BalancedLife.Application.Services {
                 throw new ApplicationException("An error occurred while getting the food.", ex);
             }
         }
+
+        public async Task<IEnumerable<NutritionalCompositionDTO>> GetNutritionalCompositions() {
+            try {
+                var nutritionalCompositions = await _foodRepository.GetNutritionalCompositions();
+                return _mapper.Map<IEnumerable<NutritionalCompositionDTO>>(nutritionalCompositions);
+            } catch ( Exception ex ) {
+                throw new ApplicationException("An error occurred while getting the nutritional compositions.", ex);
+            }
+        }
+
+        public async Task<IEnumerable<UnitMeasurementDTO>> GetUnitsMeasurement() {
+            try {
+                var unitsMeasurement = await _foodRepository.GetUnitsMeasurement();
+                return _mapper.Map<IEnumerable<UnitMeasurementDTO>>(unitsMeasurement);
+            } catch ( Exception ex ) {
+                throw new ApplicationException("An error occurred while getting the units of measurement.", ex);
+            }
+        }
     }
 }

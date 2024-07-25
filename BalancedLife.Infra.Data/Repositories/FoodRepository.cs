@@ -40,5 +40,16 @@ namespace BalancedLife.Infra.Data.Repositories {
             return food;
         }
 
+        public async Task<IEnumerable<NutritionalComposition>> GetNutritionalCompositions() {
+            var nutritionalCompositions = await _context.NutritionalCompositions.ToListAsync();
+
+            return nutritionalCompositions;
+        }
+
+        public async Task<IEnumerable<UnitMeasurement>> GetUnitsMeasurement() {
+            var unitsMeasurement = await _context.UnitMeasurements.ToListAsync();
+
+            return unitsMeasurement;
+        }
     }
 }

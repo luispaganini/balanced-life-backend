@@ -5,5 +5,7 @@ namespace BalancedLife.Domain.Interfaces {
         Task<Food> Add(Food food);
         Task<IEnumerable<Food>> FindFoodBySearch(string food, int pageNumber);
         Task<Food> GetFoodById(int id);
+        Task<IEnumerable<NutritionalComposition>> GetNutritionalCompositions();
+        Task<IEnumerable<UnitMeasurement>> GetUnitsMeasurement();
     }
 }

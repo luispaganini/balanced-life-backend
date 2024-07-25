@@ -11,5 +11,6 @@ namespace BalancedLife.Application.Interfaces {
         Task<SnackDTO> UpdateSnack(SnackFullDTO snack);
         Task DeleteSnack(long id);
 
+
     }
 }
