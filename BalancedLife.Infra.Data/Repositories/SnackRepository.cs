@@ -154,7 +154,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                     foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
                         var valuePer100g = nutritionInfo.Quantity ?? 0;
                         var adjustedValue = 
-                            valuePer100g * SnackUtils.ConvertToGrams((double) snack.Quantity, snack.IdUnitMeasurementNavigation.Name)/ 100;
+                            valuePer100g * SnackUtils.ConvertToGrams((double) snack.Quantity, snack.IdUnitMeasurementNavigation.Name) / 100;
 
                         switch ( nutritionInfo.IdNutritionalCompositionNavigation.Item ) {
                             case "Carboidrato total":
@@ -184,11 +184,18 @@ namespace BalancedLife.Infra.Data.Repositories {
             var snacks = new List<Snacks>();
 
             foreach ( var ts in allTypeSnacks ) {
-                var userSnack = userSnacks.FirstOrDefault(us => us.IdTypeSnack == ts.Id);
-                var totalSnackCalories = userSnack?.IdFoodNavigation.FoodNutritionInfos
-                    .Where(fni => fni.IdNutritionalCompositionNavigation.Item == "Energia")
-                    .Sum(fni => (fni.Quantity ?? 0) *
-                        (SnackUtils.ConvertToGrams((double) userSnack.Quantity, userSnack.IdUnitMeasurementNavigation.Name) / 100)) ?? 0;
+                var userSnacksOfType = userSnacks.Where(us => us.IdTypeSnack == ts.Id);
+
+                var totalSnackCalories = 0.0;
+
+                foreach ( var userSnack in userSnacksOfType ) {
+                    var snackCalories = userSnack?.IdFoodNavigation.FoodNutritionInfos
+                        .Where(fni => fni.IdNutritionalCompositionNavigation.Item == "Energia")
+                        .Sum(fni => (fni.Quantity ?? 0) *
+                            (SnackUtils.ConvertToGrams((double) userSnack.Quantity, userSnack.IdUnitMeasurementNavigation.Name) / 100)) ?? 0;
+
+                    totalSnackCalories += snackCalories;
+                }
 
                 var meal = userMeals
                     .Where(i => i.Appointment.Date == date.Date)
