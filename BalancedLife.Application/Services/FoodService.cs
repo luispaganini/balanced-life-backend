@@ -21,7 +21,7 @@ namespace BalancedLife.Application.Services {
 
                 return _mapper.Map<FoodDTO>(addedFood);
             } catch ( Exception ex ) {
-                throw new ApplicationException("An error occurred while adding the food.", ex);
+                throw new ApplicationException(ex.Message);
             }
         }
 

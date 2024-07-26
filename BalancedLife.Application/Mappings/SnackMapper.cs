@@ -24,11 +24,21 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.Food, opt => opt.MapFrom(src => src.IdFoodNavigation))
                 .ForMember(dest => dest.UnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurementNavigation));
             CreateMap<Food, FoodDTO>()
-                .ForMember(dest => dest.FoodNutritionInfo, opt => opt.MapFrom(src => src.FoodNutritionInfos.Any() ? src.FoodNutritionInfos : null));
+                .ForMember(dest => dest.FoodNutritionInfo, opt => opt.MapFrom(src => src.FoodNutritionInfos));
+
+            CreateMap<FoodDTO, Food>()
+                .ForMember(dest => dest.FoodNutritionInfos, opt => opt.MapFrom(src => src.FoodNutritionInfo));
 
             CreateMap<FoodNutritionInfo, FoodNutritionInfoDTO>()
                 .ForMember(dest => dest.UnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurementNavigation))
-                .ForMember(dest => dest.NutritionalComposition, opt => opt.MapFrom(src => src.IdNutritionalCompositionNavigation));
+                .ForMember(dest => dest.NutritionalComposition, opt => opt.MapFrom(src => src.IdNutritionalCompositionNavigation))
+                .ReverseMap()
+                .ForMember(dest => dest.IdUnitMeasurement, opt => opt.MapFrom(src => src.UnitMeasurement != null ? src.UnitMeasurement.Id : 0))
+                .ForMember(dest => dest.IdUnitMeasurementNavigation, opt => opt.Ignore())
+                .ForMember(dest => dest.IdNutritionalComposition, opt => opt.MapFrom(src => src.NutritionalComposition != null ? src.NutritionalComposition.Id : 0))
+                .ForMember(dest => dest.IdNutritionalCompositionNavigation, opt => opt.Ignore());
+
+
             CreateMap<UnitMeasurement, UnitMeasurementDTO>().ReverseMap();
             CreateMap<NutritionalComposition, NutritionalCompositionDTO>().ReverseMap();
 
