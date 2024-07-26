@@ -15,7 +15,8 @@ namespace BalancedLife.Application.Mappings {
                     State = new StateDTO {
                         Id = src.IdCityNavigation.IdStateNavigation.Id,
                         Name = src.IdCityNavigation.IdStateNavigation.Name,
-                        Uf = src.IdCityNavigation.IdStateNavigation.Uf
+                        Uf = src.IdCityNavigation.IdStateNavigation.Uf,
+                        Country = src.IdCityNavigation.IdStateNavigation.Country
                     }
                 }))
                 .ReverseMap();
