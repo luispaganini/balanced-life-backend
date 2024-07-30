@@ -48,11 +48,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[passwordResetCode]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[planDiet]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[refreshTokens]",
+         "Name": "[dbo].[RefreshTokens]",
          "ObjectType": 0
       },
       {

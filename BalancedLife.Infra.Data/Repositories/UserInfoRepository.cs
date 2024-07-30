@@ -15,7 +15,6 @@ namespace BalancedLife.Infra.Data.Repositories {
             _context.UserInfos.Add(user);
             await _context.SaveChangesAsync();
 
-            // Recarregar o usuário com suas propriedades de navegação incluídas
             return await _context.UserInfos
                 .Include(u => u.IdUserRoleNavigation)
                 .Include(u => u.IdCityNavigation)
@@ -52,7 +51,13 @@ namespace BalancedLife.Infra.Data.Repositories {
         public async Task<UserInfo> Update(UserInfo user) {
             _context.UserInfos.Update(user);
             await _context.SaveChangesAsync();
-            return user;
+
+            UserInfo userInfo = await _context.UserInfos
+                .Include(u => u.IdUserRoleNavigation)
+                .Include(u => u.IdCityNavigation)
+                    .ThenInclude(c => c.IdStateNavigation)
+                .FirstOrDefaultAsync(u => u.Id == user.Id);
+            return userInfo;
         }
 
     }

@@ -1,8 +1,13 @@
 ﻿using BalancedLife.Application.DTOs;
 using BalancedLife.Application.interfaces;
+using BalancedLife.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BalancedLife.API.Controllers {
     [Route("api")]
@@ -16,7 +21,7 @@ namespace BalancedLife.API.Controllers {
 
         [Authorize]
         [HttpGet("user/{id}")]
-        public async Task<IActionResult> GetUserById(int id) {
+        public async Task<IActionResult> GetUserById(long id) {
             try {
                 var result = await _userService.GetUserById(id);
                 if ( result == null ) {
@@ -54,6 +59,27 @@ namespace BalancedLife.API.Controllers {
                     return NotFound(new { message = "Usuário não encontrado." });
                 }
 
+                return Ok(result);
+            } catch ( DbUpdateConcurrencyException ) {
+                return BadRequest(new { message = "Não foi possível atualizar o usuário, por favor verifique os dados!" });
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [Authorize]
+        [HttpPatch("user/{id}")]
+        public async Task<IActionResult> PatchUser(long id, [FromBody] Dictionary<string, object> updates) {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                if ( id != long.Parse(userId) ) 
+                    return StatusCode(403, new { message = "Você não tem permissão para atualizar este usuário." });
+                
+                var result = await _userService.PatchUpdate(id, updates);
+
+                if ( result == null ) 
+                    return NotFound(new { message = "Usuário não encontrado." });
+                
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
                 return BadRequest(new { message = "Não foi possível atualizar o usuário, por favor verifique os dados!" });

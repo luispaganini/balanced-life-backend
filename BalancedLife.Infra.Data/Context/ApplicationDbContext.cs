@@ -30,6 +30,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<NutritionalComposition> NutritionalCompositions { get; set; }
 
+    public virtual DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+
     public virtual DbSet<PlanDiet> PlanDiets { get; set; }
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -182,7 +184,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Meal>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__meal__3213E83F3114B102");
+            entity.HasKey(e => e.Id).HasName("PK__meals__3213E83F430D8140");
 
             entity.ToTable("meal");
 
@@ -218,6 +220,33 @@ public partial class ApplicationDbContext : DbContext
                 .HasColumnName("item");
         });
 
+        modelBuilder.Entity<PasswordResetCode>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__password__3213E83F78961A5F");
+
+            entity.ToTable("passwordResetCode");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("createdAt");
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("datetime")
+                .HasColumnName("expiresAt");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IsUsed).HasColumnName("isUsed");
+            entity.Property(e => e.VerificationCode)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("verificationCode");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.PasswordResetCodes)
+                .HasForeignKey(d => d.IdUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_User");
+        });
+
         modelBuilder.Entity<PlanDiet>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__planDiet__3213E83F72D6552F");
@@ -240,9 +269,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__refreshT__3213E83F4B0490B2");
-
-            entity.ToTable("refreshTokens");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3213E83F6C475DCA");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -493,7 +520,6 @@ public partial class ApplicationDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("name");
         });
-        modelBuilder.HasSequence<int>("SalesOrderNumber", "SalesLT");
 
         OnModelCreatingPartial(modelBuilder);
     }

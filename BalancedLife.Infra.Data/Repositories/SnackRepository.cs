@@ -5,6 +5,7 @@ using BalancedLife.Domain.Utils;
 using BalancedLife.Infra.Data.Context;
 using BalancedLife.Infra.Data.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BalancedLife.Infra.Data.Repositories {
     public class SnackRepository : ISnackRepository {
@@ -137,10 +138,10 @@ namespace BalancedLife.Infra.Data.Repositories {
                 .Where(m => m.IdUser == userId && m.Appointment.Date == date.Date)
                 .ToListAsync();
 
-            var mealIds = userMeals.Select(m => m.Id);
+            var mealIds = userMeals.Select(m => m.Id).ToList();
 
             var userSnacks = await _context.Snacks
-                .Where(s => mealIds.Contains(s.IdMeal))
+                .Where(s => mealIds.Contains((long) s.IdMeal))
                 .Include(s => s.IdFoodNavigation)
                     .ThenInclude(fn => fn.FoodNutritionInfos)
                         .ThenInclude(fni => fni.IdUnitMeasurementNavigation)

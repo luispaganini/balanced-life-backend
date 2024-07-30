@@ -4,6 +4,7 @@ using BalancedLife.Application.interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
+using System.Text.Json;
 
 namespace BalancedLife.Application.Services {
     public class UserService : IUserService {
@@ -25,13 +26,13 @@ namespace BalancedLife.Application.Services {
                 user.Password = UserInfoUtils.HashPassword(user.Password);
                 var userInfo = _mapper.Map<UserInfo>(user);
 
-                if ( await UserExistsByCpfOrEmail(user.Cpf, user.Email) ) 
+                if ( await UserExistsByCpfOrEmail(user.Cpf, user.Email) )
                     throw new ApplicationException("User already exists.");
 
                 var addedUser = await _userRepository.Add(userInfo);
                 return _mapper.Map<UserInfoDTO>(addedUser);
             } catch ( ApplicationException ) {
-                throw; 
+                throw;
             } catch ( Exception ex ) {
                 throw new ApplicationException("An error occurred while adding the user.", ex);
             }
@@ -45,19 +46,44 @@ namespace BalancedLife.Application.Services {
                 var updatedUser = await _userRepository.Update(userInfo);
                 return _mapper.Map<UserInfoDTO>(updatedUser);
             } catch ( Exception ex ) {
-                // Log exception
                 throw new ApplicationException("An error occurred while updating the user.", ex);
             }
         }
 
-        public async Task<UserInfoDTO> GetUserById(int id) {
+        public async Task<UserInfoDTO> GetUserById(long id) {
             try {
                 var user = await _userRepository.GetById(id);
                 return _mapper.Map<UserInfoDTO>(user);
             } catch ( Exception ex ) {
-                // Log exception
                 throw new ApplicationException("An error occurred while retrieving the user by ID.", ex);
             }
+        }
+
+        public async Task<UserInfoDTO> PatchUpdate(long id, Dictionary<string, object> updates) {
+            var user = await _userRepository.GetById(id);
+            if ( user == null ) 
+                throw new Exception("Usuário não existente");
+
+            foreach ( var update in updates ) {
+                var property = typeof(UserInfo)
+                    .GetProperties()
+                    .FirstOrDefault(p => string.Equals(p.Name, update.Key, StringComparison.OrdinalIgnoreCase));
+
+                if ( property != null && property.CanWrite ) {
+                    if ( string.Equals(property.Name, "Password", StringComparison.OrdinalIgnoreCase) ) {
+                        var newPassword = update.Value.ToString();
+                        var hashedPassword = UserInfoUtils.HashPassword(newPassword);
+                        property.SetValue(user, hashedPassword);
+                    } else {
+                        var jsonValue = JsonSerializer.Serialize(update.Value);
+                        var value = JsonSerializer.Deserialize(jsonValue, property.PropertyType);
+                        property.SetValue(user, value);
+                    }
+                }
+            }
+
+            var userInfo = await _userRepository.Update(user);
+            return _mapper.Map<UserInfoDTO>(userInfo);
         }
 
         private async Task<bool> UserExistsByCpfOrEmail(string cpf, string email) {

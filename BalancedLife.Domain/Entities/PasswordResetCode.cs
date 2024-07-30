@@ -5,23 +5,19 @@ using System.Collections.Generic;
 
 namespace BalancedLife.Domain.Entities;
 
-public partial class Meal
+public partial class PasswordResetCode
 {
     public long Id { get; set; }
 
     public long IdUser { get; set; }
 
-    public DateTime Appointment { get; set; }
+    public string VerificationCode { get; set; }
 
-    public string Observation { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public int? Status { get; set; }
+    public DateTime ExpiresAt { get; set; }
 
-    public long? IdTypeSnack { get; set; }
-
-    public virtual TypeSnack IdTypeSnackNavigation { get; set; }
+    public bool IsUsed { get; set; }
 
     public virtual UserInfo IdUserNavigation { get; set; }
-
-    public virtual ICollection<Snack> Snacks { get; set; } = new List<Snack>();
 }

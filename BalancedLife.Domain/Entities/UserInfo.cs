@@ -55,6 +55,8 @@ public partial class UserInfo
 
     public virtual ICollection<Meal> Meals { get; set; } = new List<Meal>();
 
+    public virtual ICollection<PasswordResetCode> PasswordResetCodes { get; set; } = new List<PasswordResetCode>();
+
     public virtual ICollection<PlanDiet> PlanDiets { get; set; } = new List<PlanDiet>();
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
