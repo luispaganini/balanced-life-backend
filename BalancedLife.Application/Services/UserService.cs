@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using BalancedLife.Application.DTOs;
+using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
 using System.Text.Json;
 
-namespace BalancedLife.Application.Services {
+namespace BalancedLife.Application.Services
+{
     public class UserService : IUserService {
         private readonly IUserInfoRepository _userRepository;
         private readonly IMapper _mapper;
@@ -98,6 +99,11 @@ namespace BalancedLife.Application.Services {
             }
 
             return false;
+        }
+
+        public async Task<IEnumerable<PatientDTO>> GetPatients(long id) {
+            var patients = await _userRepository.GetPatients(id);
+            return _mapper.Map<IEnumerable<PatientDTO>>(patients);
         }
     }
 }

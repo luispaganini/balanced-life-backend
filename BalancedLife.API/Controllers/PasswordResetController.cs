@@ -1,5 +1,5 @@
-﻿using BalancedLife.Application.DTOs;
-using BalancedLife.Application.DTOs.Auth;
+﻿using BalancedLife.Application.DTOs.Auth;
+using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
@@ -10,7 +10,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BalancedLife.API.Controllers {
+namespace BalancedLife.API.Controllers
+{
     [ApiController]
     [Route("api")]
     public class PasswordResetController : ControllerBase {

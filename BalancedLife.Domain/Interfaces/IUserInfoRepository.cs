@@ -7,5 +7,6 @@ namespace BalancedLife.Domain.Interfaces {
         Task<UserInfo> GetByCpf(string cpf);
         Task<UserInfo> GetById(long id);
         Task<UserInfo> Update(UserInfo user);
+        Task<IEnumerable<Patient>> GetPatients(long id);
     }
 }

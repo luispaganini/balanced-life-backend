@@ -3,15 +3,25 @@ using BalancedLife.Infra.IOC;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddInfrastructureJWT(builder.Configuration);
 
+// Configurar o CORS
+builder.Services.AddCors(options => {
+    options.AddDefaultPolicy(policy => {
+        policy.AllowAnyOrigin()  // Permitir qualquer origem
+              .AllowAnyHeader()  // Permitir qualquer cabeçalho
+              .AllowAnyMethod(); // Permitir qualquer método HTTP
+    });
+});
+
 var app = builder.Build();
+
+// Use CORS middleware
+app.UseCors();
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -21,7 +31,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseExceptionHandler("/error");
-//Error Treatment
+
+// Error Treatment
 app.Map("/error", (HttpContext http) => {
     return Results.Problem(
         title: "Internal Server Error",

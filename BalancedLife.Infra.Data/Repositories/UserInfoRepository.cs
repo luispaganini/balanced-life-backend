@@ -1,6 +1,8 @@
-﻿using BalancedLife.Domain.Entities;
+﻿
+using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Infra.Data.Context;
+using BalancedLife.Infra.Data.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace BalancedLife.Infra.Data.Repositories {
@@ -46,6 +48,22 @@ namespace BalancedLife.Infra.Data.Repositories {
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             return userinfo;
+        }
+
+        public async Task<IEnumerable<Patient>> GetPatients(long id) {
+            var patients = await (from up in _context.UserPatientLinks
+                                    join us in _context.UserInfos on up.IdPatient equals us.Id
+                                    where up.IdNutritionist == id
+                                    select new Patient {
+                                        Id = up.Id,
+                                        Name = us.Name,
+                                        IsCurrentNutritionist = up.IsCurrentNutritionist,
+                                        LinkStatus = (Domain.Enums.StatusNutritionist) up.LinkStatus,
+                                        Age = EntityHelper.CalculateAge(us.Birth),
+                                    })
+                                    .ToListAsync();
+
+            return patients;
         }
 
         public async Task<UserInfo> Update(UserInfo user) {

@@ -64,4 +64,8 @@ public partial class UserInfo
     public virtual ICollection<StatusUser> StatusUserIdNutricionistNavigations { get; set; } = new List<StatusUser>();
 
     public virtual ICollection<StatusUser> StatusUserIdUserNavigations { get; set; } = new List<StatusUser>();
+
+    public virtual ICollection<UserPatientLink> UserPatientLinkIdNutritionistNavigations { get; set; } = new List<UserPatientLink>();
+
+    public virtual ICollection<UserPatientLink> UserPatientLinkIdPatientNavigations { get; set; } = new List<UserPatientLink>();
 }

@@ -50,6 +50,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<UserInfo> UserInfos { get; set; }
 
+    public virtual DbSet<UserPatientLink> UserPatientLinks { get; set; }
+
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -505,6 +507,32 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.IdUserRoleNavigation).WithMany(p => p.UserInfos)
                 .HasForeignKey(d => d.IdUserRole)
                 .HasConstraintName("user_iduserlevel_foreign");
+        });
+
+        modelBuilder.Entity<UserPatientLink>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__userPati__3213E83F183C571F");
+
+            entity.ToTable("userPatientLink");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdNutritionist).HasColumnName("idNutritionist");
+            entity.Property(e => e.IdPatient).HasColumnName("idPatient");
+            entity.Property(e => e.IsCurrentNutritionist).HasColumnName("isCurrentNutritionist");
+            entity.Property(e => e.LinkStatus)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("linkStatus");
+
+            entity.HasOne(d => d.IdNutritionistNavigation).WithMany(p => p.UserPatientLinkIdNutritionistNavigations)
+                .HasForeignKey(d => d.IdNutritionist)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Nutritionist");
+
+            entity.HasOne(d => d.IdPatientNavigation).WithMany(p => p.UserPatientLinkIdPatientNavigations)
+                .HasForeignKey(d => d.IdPatient)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Patient");
         });
 
         modelBuilder.Entity<UserRole>(entity =>

@@ -88,6 +88,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[userPatientLink]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[userRole]",
          "ObjectType": 0
       }

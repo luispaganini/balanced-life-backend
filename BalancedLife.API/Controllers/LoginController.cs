@@ -1,4 +1,5 @@
 ﻿using BalancedLife.Application.DTOs;
+using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BalancedLife.API.Controllers {
+namespace BalancedLife.API.Controllers
+{
     [Route("api")]
     [ApiController]
     public class LoginController : ControllerBase {

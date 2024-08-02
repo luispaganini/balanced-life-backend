@@ -1,4 +1,4 @@
-﻿using BalancedLife.Application.DTOs;
+﻿using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace BalancedLife.API.Controllers {
+namespace BalancedLife.API.Controllers
+{
     [Route("api")]
     [ApiController]
     public class UserController : ControllerBase {
@@ -83,6 +84,18 @@ namespace BalancedLife.API.Controllers {
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
                 return BadRequest(new { message = "Não foi possível atualizar o usuário, por favor verifique os dados!" });
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user/patients")]
+        public async Task<IActionResult> GetPatients() {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                var result = await _userService.GetPatients(long.Parse(userId));
+                return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BalancedLife.Application.DTOs;
+using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
@@ -8,7 +8,8 @@ using BalancedLife.Domain.Utils;
 using System.Security.Claims;
 using System.Text;
 
-namespace BalancedLife.Application.Services {
+namespace BalancedLife.Application.Services
+{
     public class LoginService : ILoginService {
         private readonly IUserInfoRepository _userRepository;
         private readonly IUserService _userService;
