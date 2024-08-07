@@ -88,17 +88,5 @@ namespace BalancedLife.API.Controllers
                 return BadRequest(new { message = $"{ex.Message}" });
             }
         }
-
-        [Authorize]
-        [HttpGet("user/patients")]
-        public async Task<IActionResult> GetPatients() {
-            try {
-                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                var result = await _userService.GetPatients(long.Parse(userId));
-                return Ok(result);
-            } catch ( Exception ex ) {
-                return BadRequest(new { message = $"{ex.Message}" });
-            }
-        }
     }
 }

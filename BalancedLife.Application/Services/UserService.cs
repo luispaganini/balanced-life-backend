@@ -28,7 +28,7 @@ namespace BalancedLife.Application.Services
                 var userInfo = _mapper.Map<UserInfo>(user);
 
                 if ( await UserExistsByCpfOrEmail(user.Cpf, user.Email) )
-                    throw new ApplicationException("User already exists.");
+                    throw new ApplicationException("Já existe um usuário cadastrado com esse CPF ou e-mail.");
 
                 var addedUser = await _userRepository.Add(userInfo);
                 return _mapper.Map<UserInfoDTO>(addedUser);
@@ -99,11 +99,6 @@ namespace BalancedLife.Application.Services
             }
 
             return false;
-        }
-
-        public async Task<IEnumerable<PatientDTO>> GetPatients(long id) {
-            var patients = await _userRepository.GetPatients(id);
-            return _mapper.Map<IEnumerable<PatientDTO>>(patients);
         }
     }
 }

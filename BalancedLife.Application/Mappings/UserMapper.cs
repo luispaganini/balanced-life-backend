@@ -26,6 +26,7 @@ namespace BalancedLife.Application.Mappings
             CreateMap<UserDTO, UserInfo>().ReverseMap();
             CreateMap<UserRole, UserRoleDTO>().ReverseMap();
             CreateMap<Patient, PatientDTO>().ReverseMap();
+            CreateMap<PatientLinkDTO, UserPatientLink>().ReverseMap();
         }
     }
 }

@@ -7,6 +7,5 @@ namespace BalancedLife.Application.interfaces
         Task<UserInfoDTO> Update(long id, UserDTO user);
         Task<UserInfoDTO> GetUserById(long id);
         Task<UserInfoDTO> PatchUpdate(long id, Dictionary<string, object> updates);
-        Task<IEnumerable<PatientDTO>> GetPatients(long id);
     }
 }

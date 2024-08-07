@@ -1,4 +1,5 @@
 ﻿using BalancedLife.Domain.Utils;
+using BalancedLife.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -31,6 +32,10 @@ namespace BalancedLife.Infra.Data.Utils {
                 age--;
             
             return age;
-        }   
+        }
+
+        internal static async Task LoadNavigationPropertyAsync<T>(ApplicationDbContext context, T user) {
+            throw new NotImplementedException();
+        }
     }
 }
