@@ -26,9 +26,9 @@ namespace BalancedLife.Application.Services {
             await _patientRepository.DeletePatient(id, idNutritionist);
         }
 
-        public async Task<IEnumerable<PatientLinkDTO>> GetPatients(long idNutritionist) {
+        public async Task<IEnumerable<PatientDTO>> GetPatients(long idNutritionist) {
             var patients = await _userRepository.GetPatients(idNutritionist);
-            return _mapper.Map<IEnumerable<PatientLinkDTO>>(patients);
+            return _mapper.Map<IEnumerable<PatientDTO>>(patients);
         }
 
         public async Task<PatientLinkDTO> UpdatePatient(PatientLinkDTO user) {
