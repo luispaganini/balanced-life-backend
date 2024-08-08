@@ -61,15 +61,27 @@ namespace BalancedLife.API.Controllers {
         public async Task<IActionResult> UpdatePatient([FromBody] PatientLinkDTO patient) {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                if ( patient.IdNutritionist != long.Parse(userId) ) 
+                if ( patient.IdNutritionist != long.Parse(userId) )
                     return Unauthorized(new { message = "Você não tem permissão para atualizar este paciente." });
-                
+
                 var result = await _patientService.UpdatePatient(patient);
                 if ( result == null ) {
                     return NotFound(new { message = "Paciente não encontrado." });
                 }
 
                 return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user/patient/{id}/validate")]
+        public async Task<IActionResult> IsYourPatient(long id) {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                var result = await _patientService.IsYourPatient(long.Parse(userId), id);
+                return Ok(new { isPatient = result });
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }

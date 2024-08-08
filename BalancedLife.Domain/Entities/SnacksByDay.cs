@@ -1,4 +1,6 @@
-﻿namespace BalancedLife.Domain.Entities {
+﻿using BalancedLife.Domain.Enums;
+
+namespace BalancedLife.Domain.Entities {
     public class SnacksByDay {
         public int Id { get; set; }
         public DateTime Date { get; set; }
@@ -20,5 +22,6 @@
         public TypeSnack TypeSnacks { get; set; }
         public double TotalCalories { get; set; }
         public long IdMeal { get; set; }
+        public StatusMeal StatusSnack { get; set; }
     }
 }

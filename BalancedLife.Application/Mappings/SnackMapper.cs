@@ -55,7 +55,9 @@ namespace BalancedLife.Application.Mappings {
             CreateMap<Snacks, SnackListDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-                .ForMember(dest => dest.TotalCalories, opt => opt.MapFrom(src => src.TotalCalories));
+                .ForMember(dest => dest.TotalCalories, opt => opt.MapFrom(src => src.TotalCalories))
+                .ForMember(dest => dest.IdMeal, opt => opt.MapFrom(src => src.IdMeal))
+                .ForMember(dest => dest.StatusSnack, opt => opt.MapFrom(src => src.StatusSnack));
 
             CreateMap<SnackFullDTO, Snack>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

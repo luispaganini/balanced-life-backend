@@ -2,6 +2,7 @@
 using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
+using BalancedLife.Domain.Enums;
 using BalancedLife.Domain.Interfaces;
 
 namespace BalancedLife.Application.Services {
@@ -35,6 +36,15 @@ namespace BalancedLife.Application.Services {
             var patient = _mapper.Map<UserPatientLink>(user);
             var result = await _patientRepository.UpdatePatient(patient);
             return _mapper.Map<PatientLinkDTO>(result);
+        }
+
+        public async Task<bool> IsYourPatient(long idNutritionist, long idUserLink) {
+            var patient = await _patientRepository.GetPatientById(idUserLink);
+
+            if (patient == null)
+                return false;
+
+            return (patient.IdNutritionist == idNutritionist) && (patient.LinkStatus == (int)StatusNutritionist.Accepted);
         }
     }
 }

@@ -221,6 +221,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                     Title = ts.Name,
                     TotalCalories = Math.Round((double) totalSnackCalories, 2),
                     IdMeal = meal?.Id ?? 0,
+                    StatusSnack = (StatusMeal) meal.Status
                 });
             }
 

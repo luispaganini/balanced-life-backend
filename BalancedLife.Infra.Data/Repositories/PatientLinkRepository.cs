@@ -60,5 +60,9 @@ namespace BalancedLife.Infra.Data.Repositories {
 
             return user;
         }
+
+        public async Task<UserPatientLink> GetPatientById(long id) {
+            return await _context.UserPatientLinks.FirstOrDefaultAsync(up => up.Id == id);
+        }
     }
 }

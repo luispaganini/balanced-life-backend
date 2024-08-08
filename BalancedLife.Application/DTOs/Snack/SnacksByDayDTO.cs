@@ -1,4 +1,6 @@
-﻿namespace BalancedLife.Application.DTOs.Snack {
+﻿using BalancedLife.Domain.Enums;
+
+namespace BalancedLife.Application.DTOs.Snack {
     public class SnacksByDayDTO {
         public DateTime Date { get; set; }
         public double Carbohydrates { get; set; }
@@ -16,5 +18,6 @@
         public string Title { get; set; }
         public double TotalCalories { get; set; }
         public int IdMeal { get; set; }
+        public StatusMeal StatusSnack { get; set; }
     }
 }
