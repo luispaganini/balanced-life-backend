@@ -43,6 +43,7 @@ namespace BalancedLife.Application.Mappings {
             CreateMap<NutritionalComposition, NutritionalCompositionDTO>().ReverseMap();
 
             CreateMap<SnacksByDay, SnacksByDayDTO>()
+                .ForMember(dest => dest.NameUser, opt => opt.MapFrom(src => src.NameUser))
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
                 .ForMember(dest => dest.Carbohydrates, opt => opt.MapFrom(src => src.Carbohydrates))
                 .ForMember(dest => dest.Calories, opt => opt.MapFrom(src => src.Calories))

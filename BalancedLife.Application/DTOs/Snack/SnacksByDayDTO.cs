@@ -3,6 +3,7 @@
 namespace BalancedLife.Application.DTOs.Snack {
     public class SnacksByDayDTO {
         public DateTime Date { get; set; }
+        public string NameUser { get; set; }
         public double Carbohydrates { get; set; }
         public double Calories { get; set; }
         public double Fat { get; set; }

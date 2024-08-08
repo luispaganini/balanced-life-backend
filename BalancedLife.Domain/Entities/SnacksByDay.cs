@@ -5,6 +5,7 @@ namespace BalancedLife.Domain.Entities {
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
+        public string NameUser { get; set; }
         public double Carbohydrates { get; set; }
         public double Calories { get; set; }
         public double Colesterol { get; set; }

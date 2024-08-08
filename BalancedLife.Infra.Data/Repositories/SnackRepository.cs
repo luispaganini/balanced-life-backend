@@ -225,9 +225,12 @@ namespace BalancedLife.Infra.Data.Repositories {
                 });
             }
 
+            var user = await _context.UserInfos.FindAsync((long)userId);
+
             var snacksByDay = new SnacksByDay {
                 Date = date,
                 UserId = userId,
+                NameUser = user != null ? user.Name : "",
                 Fat = Math.Round(fat, 2),
                 Carbohydrates = Math.Round(carbohydrates, 2),
                 Calories = Math.Round(calories, 2),
