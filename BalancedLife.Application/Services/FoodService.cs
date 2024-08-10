@@ -25,9 +25,9 @@ namespace BalancedLife.Application.Services {
             }
         }
 
-        public async Task<IEnumerable<FoodDTO>> FindFoodBySearch(string food, int pageNumber) {
+        public async Task<IEnumerable<FoodDTO>> FindFoodBySearch(string food, int pageNumber, int pageSize) {
             try {
-                var foods = await _foodRepository.FindFoodBySearch(food, pageNumber);
+                var foods = await _foodRepository.FindFoodBySearch(food, pageNumber, pageSize);
                 return _mapper.Map<IEnumerable<FoodDTO>>(foods);
             } catch ( Exception ex ) {
                 throw new ApplicationException("An error occurred while searching for food.", ex);

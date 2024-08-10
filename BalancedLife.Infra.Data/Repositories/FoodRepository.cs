@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 namespace BalancedLife.Infra.Data.Repositories {
     public class FoodRepository : IFoodRepository {
         private readonly ApplicationDbContext _context;
-        private readonly int _pageSize = 10;
 
         public FoodRepository(ApplicationDbContext context) {
             _context = context;
@@ -38,11 +37,11 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
 
-        public async Task<IEnumerable<Food>> FindFoodBySearch(string food, int pageNumber) {
+        public async Task<IEnumerable<Food>> FindFoodBySearch(string food, int pageNumber, int pageSize) {
             var foods = await _context.Foods
                 .Where(f => f.Name.ToLower().Contains(food.ToLower()))
-                .Skip((pageNumber - 1) * _pageSize)
-                .Take(_pageSize)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return foods;

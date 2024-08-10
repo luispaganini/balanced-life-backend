@@ -29,9 +29,9 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpGet("food/search/{food}/{pageNumber}")]
-        public async Task<IActionResult> FindFoodBySearch(string food, int pageNumber) {
+        public async Task<IActionResult> FindFoodBySearch(string food, int pageNumber, [FromQuery] int pageSize = 10) {
             try {
-                var result = await _foodService.FindFoodBySearch(food, pageNumber);
+                var result = await _foodService.FindFoodBySearch(food, pageNumber, pageSize);
                 if ( result == null )
                     return NotFound(new { message = "Alimento não encontrado." });
                 
