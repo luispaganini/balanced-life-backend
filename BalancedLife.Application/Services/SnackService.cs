@@ -3,6 +3,7 @@ using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
+using BalancedLife.Domain.Utils;
 
 namespace BalancedLife.Application.Services {
     public class SnackService : ISnackService {
@@ -42,7 +43,6 @@ namespace BalancedLife.Application.Services {
             var result = await _snackRepository.GetSnacksByDate(date, userId);
 
             return _mapper.Map<SnacksByDayDTO>(result);
-
         }
 
         public async Task<MealDTO> UpdateMeal(MealDTO snack) {

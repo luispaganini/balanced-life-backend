@@ -6,5 +6,7 @@ namespace BalancedLife.Domain.Interfaces {
         Task<UserPatientLink> UpdatePatient(UserPatientLink user);
         Task DeletePatient(long id, long idNutritionist);
         Task<UserPatientLink> GetPatientById(long id);
+        Task<UserPatientLink> GetPatientByIdPatient(long id);
+
     }
 }

@@ -7,5 +7,7 @@
         public double? Quantity { get; set; }
         public long? IdMeal { get; set; }
         public long? IdUnitMeasurement { get; set; }
+        public long? CreatedBy { get; set; }
+        public long? UpdatedBy { get; set; }
     }
 }

@@ -67,6 +67,8 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.Appointment, opt => opt.MapFrom(src => src.Appointment))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
                 .ForMember(dest => dest.IdMeal, opt => opt.MapFrom(src => src.IdMeal))
+                .ForMember(src => src.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
+                .ForMember(src => src.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
                 .ForMember(dest => dest.IdUnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurement));   
 
             CreateMap<MealStatusDTO, MealStatus>()

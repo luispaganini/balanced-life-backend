@@ -1,5 +1,6 @@
 ﻿using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Application.Interfaces;
+using BalancedLife.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,19 +13,34 @@ namespace BalancedLife.API.Controllers {
     [Authorize]
     public class SnackController : ControllerBase {
         private readonly ISnackService _snackService;
+        private readonly IPatientService _patientService;
 
-        public SnackController(ISnackService snackService) {
+        public SnackController(ISnackService snackService, IPatientService patientService) {
             _snackService = snackService;
+            _patientService = patientService;
         }
 
         [HttpGet("meal/{idMeal}/type-snack/{idTypeSnack}")]
-        public async Task<IActionResult> GetMealById(int idMeal, int idTypeSnack) {
+        public async Task<IActionResult> GetMealById(int idMeal, int idTypeSnack, [FromQuery] long? idPatient) {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                if ( idPatient.HasValue ) {
+                    var verifyPatient = await _patientService.IsYourPatientByPatientId(long.Parse(userId), (long) idPatient);
+
+                    if ( !verifyPatient.IsPatient )
+                        return Unauthorized(new { message = "Você não tem permissão desse usuário." });
+
+                    userId = verifyPatient.IdPatient.ToString();
+                }
+
                 var result = await _snackService.GetMealById(idMeal, idTypeSnack, int.Parse(userId));
-                if ( result == null ) 
+                if ( result == null )
                     return NotFound(new { message = "Os dados do lanche não encontrado." });
-                
+
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
                 return BadRequest(new { message = "Não foi possível encontrar os dados do lanche, por favor verifique os dados!" });
@@ -39,11 +55,20 @@ namespace BalancedLife.API.Controllers {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
                 if ( string.IsNullOrEmpty(userId) )
                     return Unauthorized(new { message = "Usuário não autorizado." });
-                
+
+                if ( request.idPatientLink.HasValue ) {
+                    var verifyPatient = await _patientService.IsYourPatient(long.Parse(userId), (long) request.idPatientLink);
+
+                    if ( !verifyPatient.IsPatient )
+                        return Unauthorized(new { message = "Você não tem permissão desse usuário." });
+
+                    userId = verifyPatient.IdPatient.ToString();
+                }
+
                 var result = await _snackService.GetSnacksByDate(request.Date, int.Parse(userId));
-                if ( result == null ) 
+                if ( result == null )
                     return NotFound(new { message = "Os dados dos lanches não encontrado." });
-                
+
 
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
@@ -56,6 +81,13 @@ namespace BalancedLife.API.Controllers {
         [HttpPost("snack")]
         public async Task<IActionResult> AddSnack([FromBody] SnackFullDTO snack) {
             try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                if ( snack.CreatedBy.HasValue )
+                    snack.CreatedBy = long.Parse(userId);
+
                 var result = await _snackService.AddSnack(snack);
                 return CreatedAtAction(nameof(AddSnack), result);
             } catch ( Exception ex ) {
@@ -77,6 +109,11 @@ namespace BalancedLife.API.Controllers {
         public async Task<IActionResult> UpdateSnack([FromBody] SnackFullDTO snack, int id) {
             try {
                 snack.Id = id;
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                snack.UpdatedBy = long.Parse(userId);
                 var result = await _snackService.UpdateSnack(snack);
                 if ( result == null ) {
                     return NotFound(new { message = "Lanche não encontrado." });

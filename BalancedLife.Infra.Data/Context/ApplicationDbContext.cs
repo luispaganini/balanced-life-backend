@@ -308,11 +308,17 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Appointment)
                 .HasColumnType("datetime")
                 .HasColumnName("appointment");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.IdFood).HasColumnName("idFood");
             entity.Property(e => e.IdMeal).HasColumnName("idMeal");
             entity.Property(e => e.IdTypeSnack).HasColumnName("idTypeSnack");
             entity.Property(e => e.IdUnitMeasurement).HasColumnName("idUnitMeasurement");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.SnackCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK_snack_created_by");
 
             entity.HasOne(d => d.IdFoodNavigation).WithMany(p => p.Snacks)
                 .HasForeignKey(d => d.IdFood)
@@ -331,6 +337,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.IdUnitMeasurementNavigation).WithMany(p => p.Snacks)
                 .HasForeignKey(d => d.IdUnitMeasurement)
                 .HasConstraintName("FK_UnitMeasurement");
+
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.SnackUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("FK_snack_updated_by");
         });
 
         modelBuilder.Entity<State>(entity =>
@@ -519,10 +529,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.IdNutritionist).HasColumnName("idNutritionist");
             entity.Property(e => e.IdPatient).HasColumnName("idPatient");
             entity.Property(e => e.IsCurrentNutritionist).HasColumnName("isCurrentNutritionist");
-            entity.Property(e => e.LinkStatus)
-                .IsRequired()
-                .HasMaxLength(50)
-                .HasColumnName("linkStatus");
+            entity.Property(e => e.LinkStatus).HasColumnName("linkStatus");
 
             entity.HasOne(d => d.IdNutritionistNavigation).WithMany(p => p.UserPatientLinkIdNutritionistNavigations)
                 .HasForeignKey(d => d.IdNutritionist)

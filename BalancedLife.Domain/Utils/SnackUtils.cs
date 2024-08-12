@@ -1,4 +1,6 @@
-﻿namespace BalancedLife.Domain.Utils {
+﻿using BalancedLife.Domain.Entities;
+
+namespace BalancedLife.Domain.Utils {
     public static class SnackUtils {
         public static double ConvertToGrams(double value, string unit) {
             switch ( unit ) {
@@ -20,7 +22,7 @@
                 case "oz":
                     return value * 28.3495;
                 default:
-                    return 0;
+                    return value;
             }
         }
 
@@ -33,7 +35,7 @@
 
             switch ( nutrientName.ToLower() ) {
                 case "carboidrato total":
-                //case "carboidrato disponível":
+                    //case "carboidrato disponível":
                     calories = valueInGrams * caloriesPerGramCarbohydrate;
                     break;
                 case "proteína":
@@ -47,5 +49,65 @@
             return calories;
         }
 
+        public static SnackFormatted GetNutritionValues(ICollection<Snack> snacksNotFormatted) {
+            var values = new List<NutritionalValue>();
+            var Snack = new SnackFormatted();
+
+            var nutrientMapping = new Dictionary<string, Action<NutritionalValue>> {
+                { "energia", value => Snack.Energy = value },
+                { "umidade", value => Snack.Moisture = value },
+                { "carboidrato total", value => Snack.TotalCarbohydrate = value },
+                { "carboidrato disponível", value => Snack.AvailableCarbohydrate = value },
+                { "proteína", value => Snack.Protein = value },
+                { "lipídios", value => Snack.Lipids = value },
+                { "fibra alimentar", value => Snack.DietaryFiber = value },
+                { "álcool", value => Snack.Alcohol = value },
+                { "cinzas", value => Snack.Ash = value },
+                { "colesterol", value => Snack.Cholesterol = value },
+                { "ácidos graxos saturados", value => Snack.SaturatedFattyAcids = value },
+                { "ácidos graxos monoinsaturados", value => Snack.MonounsaturatedFattyAcids = value },
+                { "ácidos graxos poliinsaturados", value => Snack.PolyunsaturatedFattyAcids = value },
+                { "ácidos graxos trans", value => Snack.TransFattyAcids = value },
+                { "cálcio", value => Snack.Calcium = value },
+                { "ferro", value => Snack.Iron = value },
+                { "sódio", value => Snack.Sodium = value },
+                { "magnésio", value => Snack.Magnesium = value },
+                { "fósforo", value => Snack.Phosphorus = value },
+                { "potássio", value => Snack.Potassium = value },
+                { "manganês", value => Snack.Manganese = value },
+                { "zinco", value => Snack.Zinc = value },
+                { "cobre", value => Snack.Copper = value },
+                { "selênio", value => Snack.Selenium = value },
+                { "vitamina a (re)", value => Snack.VitaminA_RE = value },
+                { "vitamina a (rae)", value => Snack.VitaminA_RAE = value },
+                { "vitamina d", value => Snack.VitaminD = value },
+                { "alfa-tocoferol (vitamina e)", value => Snack.AlphaTocopherol = value },
+                { "tiamina", value => Snack.Thiamine = value },
+                { "riboflavina", value => Snack.Riboflavin = value },
+                { "niacina", value => Snack.Niacin = value },
+                { "vitamina b6", value => Snack.VitaminB6 = value },
+                { "vitamina b12", value => Snack.VitaminB12 = value },
+                { "vitamina c", value => Snack.VitaminC = value },
+                { "equivalente de folato", value => Snack.FolateEquivalent = value },
+            };
+
+            foreach ( var snack in snacksNotFormatted ) {
+                foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
+                    var valuePer100g = nutritionInfo.Quantity ?? 0;
+                    var adjustedValue = valuePer100g * SnackUtils.ConvertToGrams((double) snack.Quantity, snack.IdUnitMeasurementNavigation.Name) / 100;
+
+                    // Converte o tipo de nutriente para minúsculas e tenta obter a ação correspondente
+                    var nutrientType = nutritionInfo.IdNutritionalCompositionNavigation.Item.ToLower();
+                    if ( nutrientMapping.TryGetValue(nutrientType, out var setNutritionalValue) ) {
+                        setNutritionalValue(new NutritionalValue {
+                            UnitMeasurement = nutritionInfo.IdUnitMeasurementNavigation.Name,
+                            Total = SnackUtils.CalculateCalories(nutritionInfo.IdNutritionalCompositionNavigation.Item, adjustedValue)
+                        });
+                    }
+                }
+            }
+
+            return Snack;
+        }
     }
 }

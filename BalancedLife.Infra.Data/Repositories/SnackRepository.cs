@@ -29,6 +29,7 @@ namespace BalancedLife.Infra.Data.Repositories {
             await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdUnitMeasurementNavigation, snack.IdUnitMeasurement, _context.UnitMeasurements);
             await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdMealNavigation, snack.IdMeal, _context.Meals);
             await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.IdTypeSnackNavigation, snack.IdTypeSnack, _context.TypeSnacks);
+            await EntityHelper.LoadNavigationPropertyAsync(snack, s => s.CreatedByNavigation, snack.CreatedBy, _context.UserInfos);
 
             var result = await _context.Snacks.AddAsync(snack);
             await _context.SaveChangesAsync();
@@ -199,7 +200,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                 }
 
                 var meal = userMeals
-                    .Where(i => i.Appointment.Date == date.Date)
+                    .Where(i => i.Appointment.Date.Date == date.Date.Date)
                     .FirstOrDefault(m => m.IdTypeSnack == ts.Id);
 
                 if ( meal == null ) {
@@ -222,6 +223,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                     TotalCalories = Math.Round((double) totalSnackCalories, 2),
                     IdMeal = meal?.Id ?? 0,
                     StatusSnack = (StatusMeal) meal.Status
+
                 });
             }
 

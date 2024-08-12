@@ -6,7 +6,9 @@ namespace BalancedLife.Application.Interfaces {
         Task DeletePatient(long id, long idNutritionist);
         Task<PatientLinkDTO> AddPatient(PatientLinkDTO user);
         Task<PatientLinkDTO> UpdatePatient(PatientLinkDTO user);
-        Task<bool> IsYourPatient(long idNutritionist, long idPatient);
+        Task<PatientLinkDTO> GetPatientLinkById(long id);
+        Task<PatientVerifyDTO> IsYourPatient(long idNutritionist, long idPatient);
+        Task<PatientVerifyDTO> IsYourPatientByPatientId(long idNutritionist, long idPatient);
 
     }
 }

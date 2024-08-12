@@ -21,6 +21,12 @@ public partial class Snack
 
     public long? IdUnitMeasurement { get; set; }
 
+    public long? CreatedBy { get; set; }
+
+    public long? UpdatedBy { get; set; }
+
+    public virtual UserInfo CreatedByNavigation { get; set; }
+
     public virtual Food IdFoodNavigation { get; set; }
 
     public virtual Meal IdMealNavigation { get; set; }
@@ -28,4 +34,6 @@ public partial class Snack
     public virtual TypeSnack IdTypeSnackNavigation { get; set; }
 
     public virtual UnitMeasurement IdUnitMeasurementNavigation { get; set; }
+
+    public virtual UserInfo UpdatedByNavigation { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using BalancedLife.Domain.Entities;
-
-namespace BalancedLife.Application.DTOs.Snack {
+﻿namespace BalancedLife.Application.DTOs.Snack {
     public class FoodDTO {
         public long Id { get; set; }
 

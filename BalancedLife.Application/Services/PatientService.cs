@@ -32,19 +32,45 @@ namespace BalancedLife.Application.Services {
             return _mapper.Map<IEnumerable<PatientDTO>>(patients);
         }
 
+        public async Task<PatientLinkDTO> GetPatientLinkById(long id) {
+            var patient = await _patientRepository.GetPatientById(id);
+            return _mapper.Map<PatientLinkDTO>(patient);
+        }
+
         public async Task<PatientLinkDTO> UpdatePatient(PatientLinkDTO user) {
             var patient = _mapper.Map<UserPatientLink>(user);
             var result = await _patientRepository.UpdatePatient(patient);
             return _mapper.Map<PatientLinkDTO>(result);
         }
 
-        public async Task<bool> IsYourPatient(long idNutritionist, long idUserLink) {
+        public async Task<PatientVerifyDTO> IsYourPatient(long idNutritionist, long idUserLink) {
             var patient = await _patientRepository.GetPatientById(idUserLink);
 
-            if (patient == null)
-                return false;
+            if ( patient == null )
+                return new PatientVerifyDTO {
+                    IsPatient = false,
+                    IdPatient = 0
+                };
 
-            return (patient.IdNutritionist == idNutritionist) && (patient.LinkStatus == (int)StatusNutritionist.Accepted);
+            return new PatientVerifyDTO {
+                IsPatient = (patient.IdNutritionist == idNutritionist) && (patient.LinkStatus == (int) StatusNutritionist.Accepted),
+                IdPatient = patient.IdPatient
+            };
+        }
+
+        public async Task<PatientVerifyDTO> IsYourPatientByPatientId(long idNutritionist, long idPatient) {
+            var patient = await _patientRepository.GetPatientByIdPatient(idPatient);
+
+            if ( patient == null )
+                return new PatientVerifyDTO { 
+                    IsPatient = false,
+                    IdPatient = 0
+                };
+
+            return new PatientVerifyDTO {
+                IsPatient = (patient.IdNutritionist == idNutritionist) && (patient.LinkStatus == (int) StatusNutritionist.Accepted),
+                IdPatient = patient.IdPatient
+            };
         }
     }
 }

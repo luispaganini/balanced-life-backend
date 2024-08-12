@@ -81,7 +81,22 @@ namespace BalancedLife.API.Controllers {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
                 var result = await _patientService.IsYourPatient(long.Parse(userId), id);
-                return Ok(new { isPatient = result });
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user/patient/link/{id}")]
+        public async Task<IActionResult> GetPatientLinkById(long id) {
+            try {
+                var result = await _patientService.GetPatientLinkById(id);
+                if ( result == null ) {
+                    return NotFound(new { message = "Paciente não encontrado." });
+                }
+
+                return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }

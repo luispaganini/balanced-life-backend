@@ -61,6 +61,10 @@ public partial class UserInfo
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
+    public virtual ICollection<Snack> SnackCreatedByNavigations { get; set; } = new List<Snack>();
+
+    public virtual ICollection<Snack> SnackUpdatedByNavigations { get; set; } = new List<Snack>();
+
     public virtual ICollection<StatusUser> StatusUserIdNutricionistNavigations { get; set; } = new List<StatusUser>();
 
     public virtual ICollection<StatusUser> StatusUserIdUserNavigations { get; set; } = new List<StatusUser>();
