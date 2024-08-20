@@ -62,11 +62,16 @@ namespace BalancedLife.Infra.Data.Repositories {
                     .ThenInclude(s => s.IdFoodNavigation)
                         .ThenInclude(fn => fn.FoodNutritionInfos)
                             .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
+                .Include(m => m.Snacks)
+                    .ThenInclude(s => s.IdTypeSnackNavigation)
                 .FirstOrDefaultAsync(m => m.Id == idMeal);
 
             if ( meal == null ) {
+                TimeZoneInfo brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                DateTime brasiliaDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, brasiliaTimeZone);
+
                 meal = new MealInfo {
-                    Appointment = DateTime.Now,
+                    Appointment = brasiliaDateTime,
                     IdUser = idUser,
                     IdTypeSnack = idTypeSnack,
                     Observation = "",
@@ -121,6 +126,9 @@ namespace BalancedLife.Infra.Data.Repositories {
                 Fat = Math.Round(fat, 2),
                 TotalCalories = Math.Round(totalCalories, 2)
             };
+
+            await EntityHelper.LoadNavigationPropertyAsync(mealInfo, s => s.IdTypeSnackNavigation, mealInfo.IdTypeSnack, _context.TypeSnacks);
+
 
             return mealInfo;
         }
@@ -204,8 +212,11 @@ namespace BalancedLife.Infra.Data.Repositories {
                     .FirstOrDefault(m => m.IdTypeSnack == ts.Id);
 
                 if ( meal == null ) {
+                    TimeZoneInfo brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                    DateTime brasiliaDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, brasiliaTimeZone);
+
                     meal = new MealInfo {
-                        Appointment = DateTime.Now,
+                        Appointment = brasiliaDateTime,
                         IdUser = userId,
                         IdTypeSnack = ts.Id,
                         Observation = "",

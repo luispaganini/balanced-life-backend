@@ -72,5 +72,15 @@ namespace BalancedLife.Application.Services {
                 IdPatient = patient.IdPatient
             };
         }
+
+        public async Task<IEnumerable<NutritionistLinkPatientDTO>> GetNutritionistsByPatientId(long idPatient) {
+            var patient = await _patientRepository.GetNutritionistsByPatientId(idPatient);
+            return _mapper.Map<IEnumerable<NutritionistLinkPatientDTO>>(patient);
+        }
+
+        public async Task<UserInfoDTO> GetActualNutritionist(long idPatient) {
+            var nutritionist = await _patientRepository.GetActualNutritionist(idPatient);
+            return _mapper.Map<UserInfoDTO>(nutritionist);
+        }
     }
 }

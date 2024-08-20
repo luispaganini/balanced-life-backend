@@ -47,9 +47,20 @@ namespace BalancedLife.Infra.Data.Repositories {
 
             var existingUser = await _context.UserPatientLinks.FindAsync(user.Id);
 
-            if ( existingUser == null ) 
+            if ( existingUser == null )
                 throw new KeyNotFoundException("O link paciente-nutricionista não foi encontrado.");
-            
+
+            if ( user.LinkStatus == 1 && user.IsCurrentNutritionist ) {
+                var conflictingLink = await _context.UserPatientLinks
+                    .Where(link => link.Id != user.Id &&
+                                   link.IdPatient == user.IdPatient &&
+                                   link.IsCurrentNutritionist)
+                    .FirstOrDefaultAsync();
+
+                if ( conflictingLink != null ) {
+                    conflictingLink.IsCurrentNutritionist = false;
+                }
+            }
 
             existingUser.IdNutritionist = user.IdNutritionist;
             existingUser.IdPatient = user.IdPatient;
@@ -67,6 +78,27 @@ namespace BalancedLife.Infra.Data.Repositories {
 
         public async Task<UserPatientLink> GetPatientByIdPatient(long id) {
             return await _context.UserPatientLinks.FirstOrDefaultAsync(up => up.IdPatient == id);
+        }
+
+        public async Task<IEnumerable<NutritionistLinkPatient>> GetNutritionistsByPatientId(long idPatient) {
+            return await _context.UserPatientLinks
+                .Include(up => up.IdNutritionistNavigation)
+                    .ThenInclude(n => n.IdCityNavigation)
+                        .ThenInclude(c => c.IdStateNavigation)
+                .Where(up => up.IdPatient == idPatient)
+                .Select(up => new NutritionistLinkPatient {
+                    Link = up,
+                    Nutritionist = up.IdNutritionistNavigation
+                })
+                .ToListAsync();
+        }
+
+        public async Task<UserInfo> GetActualNutritionist(long idPatient) {
+            return await _context.UserPatientLinks
+                .Include(up => up.IdNutritionistNavigation)
+                .Where(up => up.IdPatient == idPatient && up.IsCurrentNutritionist)
+                .Select(up => up.IdNutritionistNavigation)
+                .FirstOrDefaultAsync();
         }
     }
 }

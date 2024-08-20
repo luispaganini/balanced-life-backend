@@ -40,14 +40,18 @@ namespace BalancedLife.Infra.Data.Repositories {
         public async Task<IEnumerable<Food>> FindFoodBySearch(string food, int pageNumber, int pageSize) {
             var foods = await _context.Foods
                 .Where(f => f.Name.ToLower().Contains(food.ToLower()))
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync();  // Carrega todos os resultados para a memória
 
-            return foods;
+            var sortedFoods = foods
+                .OrderBy(f => f.Name.StartsWith(food, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                .ThenBy(f => f.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+
+            return sortedFoods;
         }
 
-        public async Task<Food> GetFoodById(int id) {
+            public async Task<Food> GetFoodById(int id) {
             var food = await _context.Foods
                 .Include(f => f.FoodNutritionInfos)
                     .ThenInclude(fni => fni.IdUnitMeasurementNavigation)

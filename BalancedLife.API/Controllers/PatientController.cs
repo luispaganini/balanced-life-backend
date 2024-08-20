@@ -61,7 +61,7 @@ namespace BalancedLife.API.Controllers {
         public async Task<IActionResult> UpdatePatient([FromBody] PatientLinkDTO patient) {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                if ( patient.IdNutritionist != long.Parse(userId) )
+                if ( patient.IdNutritionist != long.Parse(userId) && patient.IdPatient != long.Parse(userId) )
                     return Unauthorized(new { message = "Você não tem permissão para atualizar este paciente." });
 
                 var result = await _patientService.UpdatePatient(patient);
@@ -102,6 +102,36 @@ namespace BalancedLife.API.Controllers {
             }
         }
 
+        [Authorize]
+        [HttpGet("user/nutritionists")]
+        public async Task<IActionResult> GetNutritionistsByPatient() {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
 
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                var result = await _patientService.GetNutritionistsByPatientId(long.Parse(userId));
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user/nutritionist")]
+        public async Task<IActionResult> GetActualNutritionist() {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                var result = await _patientService.GetActualNutritionist(long.Parse(userId));
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
     }
 }

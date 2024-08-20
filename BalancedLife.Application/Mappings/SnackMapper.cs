@@ -18,6 +18,7 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.Fat, opt => opt.MapFrom(src => src.Fat))
                 .ForMember(dest => dest.Protein, opt => opt.MapFrom(src => src.Protein))
                 .ForMember(dest => dest.Others, opt => opt.MapFrom(src => src.Others))
+                .ForMember(dest => dest.TypeSnack, opt => opt.MapFrom(src => src.IdTypeSnackNavigation))
                 .ForMember(dest => dest.TotalCalories, opt => opt.MapFrom(src => src.TotalCalories));
             CreateMap<Snack, SnackDTO>()
                 .ForMember(dest => dest.TypeSnack, opt => opt.MapFrom(src => src.IdTypeSnackNavigation))
