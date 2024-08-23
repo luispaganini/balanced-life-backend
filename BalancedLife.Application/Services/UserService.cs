@@ -24,7 +24,9 @@ namespace BalancedLife.Application.Services
 
             try {
                 user.IsCompleteProfile = !string.IsNullOrEmpty(user.Password);
-                user.Password = UserInfoUtils.HashPassword(user.Password);
+                if ( user.IsCompleteProfile )
+                    user.Password = UserInfoUtils.HashPassword(user.Password);
+
                 var userInfo = _mapper.Map<UserInfo>(user);
 
                 if ( await UserExistsByCpfOrEmail(user.Cpf, user.Email) )

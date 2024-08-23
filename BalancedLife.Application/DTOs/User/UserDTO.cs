@@ -12,7 +12,7 @@ namespace BalancedLife.Application.DTOs.User
         public DateTime Birth { get; set; }
 
         [RegularExpression("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", ErrorMessage = "Formato de senha inválido")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [Required(ErrorMessage = "O campo Email é obrigatório.")]
         [EmailAddress(ErrorMessage = "O campo Email deve ser um endereço de email válido.")]
