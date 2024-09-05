@@ -27,11 +27,19 @@ namespace BalancedLife.Application.Services
                 if ( user.IsCompleteProfile )
                     user.Password = UserInfoUtils.HashPassword(user.Password);
 
-                var userInfo = _mapper.Map<UserInfo>(user);
+
+                var userByCpf = await _userRepository.GetByCpf(user.Cpf);
+
+                if ( userByCpf != null && !userByCpf.IsCompleteProfile && user.IsCompleteProfile) {
+                    var updateUser = await Update(userByCpf.Id, user);
+
+                    return updateUser;
+                }
 
                 if ( await UserExistsByCpfOrEmail(user.Cpf, user.Email) )
                     throw new ApplicationException("Já existe um usuário cadastrado com esse CPF ou e-mail.");
 
+                var userInfo = _mapper.Map<UserInfo>(user);
                 var addedUser = await _userRepository.Add(userInfo);
                 return _mapper.Map<UserInfoDTO>(addedUser);
             } catch ( ApplicationException ) {
@@ -46,7 +54,17 @@ namespace BalancedLife.Application.Services
                 user.IsCompleteProfile = !string.IsNullOrEmpty(user.Password);
                 var userInfo = _mapper.Map<UserInfo>(user);
                 userInfo.Id = id;
-                var updatedUser = await _userRepository.Update(userInfo);
+
+                // Carregue a entidade existente do repositório
+                var existingUser = await _userRepository.GetByCpf(user.Cpf);
+                if ( existingUser == null ) {
+                    throw new ApplicationException("User not found.");
+                }
+
+                // Atualize as propriedades da entidade existente
+                _mapper.Map(user, existingUser);
+                var updatedUser = await _userRepository.Update(existingUser);
+
                 return _mapper.Map<UserInfoDTO>(updatedUser);
             } catch ( Exception ex ) {
                 throw new ApplicationException("An error occurred while updating the user.", ex);
