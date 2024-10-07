@@ -212,11 +212,10 @@ namespace BalancedLife.Infra.Data.Repositories {
                     .FirstOrDefault(m => m.IdTypeSnack == ts.Id);
 
                 if ( meal == null ) {
-                    TimeZoneInfo brasiliaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-                    DateTime brasiliaDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, brasiliaTimeZone);
+                    DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(date);
 
                     meal = new MealInfo {
-                        Appointment = brasiliaDateTime,
+                        Appointment = utcDateTime,
                         IdUser = userId,
                         IdTypeSnack = ts.Id,
                         Observation = "",
