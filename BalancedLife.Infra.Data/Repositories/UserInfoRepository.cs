@@ -64,7 +64,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                                       LinkStatus = (StatusNutritionist) up.LinkStatus,
                                       Age = EntityHelper.CalculateAge(us.Birth),
                                   })
-                                    .OrderByDescending(e => e.LinkStatus)
+                                    .OrderBy(e => e.LinkStatus)
                                     .ThenBy(p => p.Name)
                                     .Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize)
