@@ -1,6 +1,7 @@
 ﻿using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
+using BalancedLife.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,10 +19,15 @@ namespace BalancedLife.API.Controllers {
 
         [Authorize]
         [HttpGet("user/patients")]
-        public async Task<IActionResult> GetPatients() {
+        public async Task<IActionResult> GetPatients(
+            [FromQuery] int page, 
+            [FromQuery] int pageSize, 
+            [FromQuery] string? patientName, 
+            [FromQuery] StatusNutritionist? status) 
+        {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                var result = await _patientService.GetPatients(long.Parse(userId));
+                var result = await _patientService.GetPatients(long.Parse(userId), page, pageSize, patientName, status);
                 return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });

@@ -1,5 +1,6 @@
 ﻿
 using BalancedLife.Domain.Entities;
+using BalancedLife.Domain.Enums;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Infra.Data.Context;
 using BalancedLife.Infra.Data.Utils;
@@ -50,17 +51,23 @@ namespace BalancedLife.Infra.Data.Repositories {
             return userinfo;
         }
 
-        public async Task<IEnumerable<Patient>> GetPatients(long id) {
+        public async Task<IEnumerable<Patient>> GetPatients(long id, int pageNumber, int pageSize, string? patientName, StatusNutritionist? status) {
             var patients = await (from up in _context.UserPatientLinks
-                                    join us in _context.UserInfos on up.IdPatient equals us.Id
-                                    where up.IdNutritionist == id
-                                    select new Patient {
-                                        Id = up.Id,
-                                        Name = us.Name,
-                                        IsCurrentNutritionist = up.IsCurrentNutritionist,
-                                        LinkStatus = (Domain.Enums.StatusNutritionist) up.LinkStatus,
-                                        Age = EntityHelper.CalculateAge(us.Birth),
-                                    })
+                                  join us in _context.UserInfos on up.IdPatient equals us.Id
+                                  where up.IdNutritionist == id
+                                  && (patientName == null || us.Name.Contains(patientName))
+                                  && (status == null || up.LinkStatus == (int) status)
+                                  select new Patient {
+                                      Id = up.Id,
+                                      Name = us.Name,
+                                      IsCurrentNutritionist = up.IsCurrentNutritionist,
+                                      LinkStatus = (Domain.Enums.StatusNutritionist) up.LinkStatus,
+                                      Age = EntityHelper.CalculateAge(us.Birth),
+                                  })
+                                    .OrderByDescending(e => e.LinkStatus)
+                                    .ThenBy(p => p.Name)
+                                    .Skip((pageNumber - 1) * pageSize)
+                                    .Take(pageSize)
                                     .ToListAsync();
 
             return patients;

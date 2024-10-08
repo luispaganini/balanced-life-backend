@@ -1,8 +1,9 @@
 ﻿using BalancedLife.Application.DTOs.User;
+using BalancedLife.Domain.Enums;
 
 namespace BalancedLife.Application.Interfaces {
     public interface IPatientService {
-        Task<IEnumerable<PatientDTO>> GetPatients(long id);
+        Task<IEnumerable<PatientDTO>> GetPatients(long id, int pageNumber, int pageSize, string? patientName, StatusNutritionist? status);
         Task DeletePatient(long id, long idNutritionist);
         Task<PatientLinkDTO> AddPatient(PatientLinkDTO user);
         Task<PatientLinkDTO> UpdatePatient(PatientLinkDTO user);
