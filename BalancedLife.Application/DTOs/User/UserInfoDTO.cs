@@ -1,9 +1,5 @@
-﻿using BalancedLife.Domain.Entities;
-
-namespace BalancedLife.Application.DTOs.User
-{
-    public class UserInfoDTO
-    {
+﻿namespace BalancedLife.Application.DTOs.User {
+    public class UserInfoDTO {
         public long Id { get; set; }
 
         public string Name { get; set; }

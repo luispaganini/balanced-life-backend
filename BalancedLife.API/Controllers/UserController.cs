@@ -1,16 +1,12 @@
 ﻿using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
-using BalancedLife.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace BalancedLife.API.Controllers
-{
+namespace BalancedLife.API.Controllers {
     [Route("api")]
     [ApiController]
     public class UserController : ControllerBase {
@@ -73,14 +69,14 @@ namespace BalancedLife.API.Controllers
         public async Task<IActionResult> PatchUser(long id, [FromBody] Dictionary<string, object> updates) {
             try {
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                if ( id != long.Parse(userId) ) 
+                if ( id != long.Parse(userId) )
                     return StatusCode(403, new { message = "Você não tem permissão para atualizar este usuário." });
-                
+
                 var result = await _userService.PatchUpdate(id, updates);
 
-                if ( result == null ) 
+                if ( result == null )
                     return NotFound(new { message = "Usuário não encontrado." });
-                
+
                 return Ok(result);
             } catch ( DbUpdateConcurrencyException ) {
                 return BadRequest(new { message = "Não foi possível atualizar o usuário, por favor verifique os dados!" });

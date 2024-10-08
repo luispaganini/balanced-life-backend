@@ -3,7 +3,6 @@ using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
-using BalancedLife.Domain.Utils;
 
 namespace BalancedLife.Application.Services {
     public class SnackService : ISnackService {

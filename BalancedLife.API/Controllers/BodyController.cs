@@ -39,7 +39,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _bodyService.Add(body);
                 if ( result != null ) {
                     return CreatedAtAction(nameof(Add), result);
-                }   
+                }
 
                 return BadRequest(new { message = "Não foi possível registrar os dados do corpo, por favor verifique os dados!" });
             } catch ( Exception ex ) {
@@ -78,6 +78,6 @@ namespace BalancedLife.API.Controllers {
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
-        }   
+        }
     }
 }

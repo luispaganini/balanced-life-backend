@@ -20,7 +20,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _foodService.Add(food);
                 if ( result != null ) {
                     return CreatedAtAction(nameof(Add), result);
-                }   
+                }
 
                 return BadRequest(new { message = "Não foi possível registrar os dados do alimento, por favor verifique os dados!" });
             } catch ( Exception ex ) {
@@ -34,7 +34,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _foodService.FindFoodBySearch(food, pageNumber, pageSize);
                 if ( result == null )
                     return NotFound(new { message = "Alimento não encontrado." });
-                
+
 
                 return Ok(result);
             } catch ( Exception ex ) {
@@ -48,7 +48,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _foodService.GetFoodById(id);
                 if ( result == null )
                     return NotFound(new { message = "Alimento não encontrado." });
-                
+
                 return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
@@ -61,7 +61,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _foodService.GetUnitsMeasurement();
                 if ( result == null )
                     return NotFound(new { message = "Unidades de medida não encontradas." });
-                
+
                 return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
@@ -74,7 +74,7 @@ namespace BalancedLife.API.Controllers {
                 var result = await _foodService.GetNutritionalCompositions();
                 if ( result == null )
                     return NotFound(new { message = "Composições nutricionais não encontradas." });
-                
+
                 return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });

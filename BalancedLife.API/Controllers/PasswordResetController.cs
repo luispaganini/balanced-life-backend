@@ -3,15 +3,13 @@ using BalancedLife.Application.DTOs.User;
 using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
-using BalancedLife.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BalancedLife.API.Controllers
-{
+namespace BalancedLife.API.Controllers {
     [ApiController]
     [Route("api")]
     public class PasswordResetController : ControllerBase {
@@ -42,9 +40,9 @@ namespace BalancedLife.API.Controllers
             var userId = await _passwordResetService.VerifyResetCodeAsync(request.VerificationCode);
             if ( userId > 0 ) {
                 var getUser = await _userService.GetUserById(userId);
-                if ( getUser == null ) 
+                if ( getUser == null )
                     return NotFound(new { message = "Usuário não encontrado." });
-                
+
                 return Ok(await GenerateTokensAsync(getUser));
             } else {
                 return BadRequest(new { message = "Código de verificação inválido ou expirado." });

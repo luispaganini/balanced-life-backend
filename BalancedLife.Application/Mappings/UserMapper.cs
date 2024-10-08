@@ -3,8 +3,7 @@ using BalancedLife.Application.DTOs;
 using BalancedLife.Application.DTOs.User;
 using BalancedLife.Domain.Entities;
 
-namespace BalancedLife.Application.Mappings
-{
+namespace BalancedLife.Application.Mappings {
     public class UserMapper : Profile {
         public UserMapper() {
             CreateMap<UserInfo, UserInfoDTO>()

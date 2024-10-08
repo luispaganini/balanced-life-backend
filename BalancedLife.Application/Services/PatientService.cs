@@ -62,7 +62,7 @@ namespace BalancedLife.Application.Services {
             var patient = await _patientRepository.GetPatientByIdPatient(idPatient);
 
             if ( patient == null )
-                return new PatientVerifyDTO { 
+                return new PatientVerifyDTO {
                     IsPatient = false,
                     IdPatient = 0
                 };

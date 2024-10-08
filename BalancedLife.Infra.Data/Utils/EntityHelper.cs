@@ -1,5 +1,4 @@
-﻿using BalancedLife.Domain.Utils;
-using BalancedLife.Infra.Data.Context;
+﻿using BalancedLife.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -28,9 +27,9 @@ namespace BalancedLife.Infra.Data.Utils {
         public static int CalculateAge(DateTime birthdate) {
             var today = DateTime.Today;
             var age = today.Year - birthdate.Year;
-            if ( birthdate.Date > today.AddYears(-age) ) 
+            if ( birthdate.Date > today.AddYears(-age) )
                 age--;
-            
+
             return age;
         }
 

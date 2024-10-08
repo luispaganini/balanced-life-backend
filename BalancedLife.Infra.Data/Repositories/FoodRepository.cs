@@ -16,9 +16,9 @@ namespace BalancedLife.Infra.Data.Repositories {
             var existingFood = await _context.Foods
                 .FirstOrDefaultAsync(f => f.Name == food.Name);
 
-            if ( existingFood != null ) 
+            if ( existingFood != null )
                 throw new Exception($"Um alimento com o nome '{food.Name}' já existe.");
-            
+
 
             await EntityHelper.LoadNavigationPropertyAsync(food, s => s.IdFoodGroupNavigation, food.IdFoodGroup, _context.FoodGroups);
 
@@ -51,7 +51,7 @@ namespace BalancedLife.Infra.Data.Repositories {
             return sortedFoods;
         }
 
-            public async Task<Food> GetFoodById(int id) {
+        public async Task<Food> GetFoodById(int id) {
             var food = await _context.Foods
                 .Include(f => f.FoodNutritionInfos)
                     .ThenInclude(fni => fni.IdUnitMeasurementNavigation)

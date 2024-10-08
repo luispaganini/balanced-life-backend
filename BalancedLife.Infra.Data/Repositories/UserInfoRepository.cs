@@ -61,7 +61,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                                       Id = up.Id,
                                       Name = us.Name,
                                       IsCurrentNutritionist = up.IsCurrentNutritionist,
-                                      LinkStatus = (Domain.Enums.StatusNutritionist) up.LinkStatus,
+                                      LinkStatus = (StatusNutritionist) up.LinkStatus,
                                       Age = EntityHelper.CalculateAge(us.Birth),
                                   })
                                     .OrderByDescending(e => e.LinkStatus)

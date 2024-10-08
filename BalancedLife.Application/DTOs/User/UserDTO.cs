@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BalancedLife.Application.DTOs.User
-{
-    public class UserDTO
-    {
+namespace BalancedLife.Application.DTOs.User {
+    public class UserDTO {
         [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         public string Name { get; set; }
 

@@ -1,6 +1,5 @@
 ﻿using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Application.Interfaces;
-using BalancedLife.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

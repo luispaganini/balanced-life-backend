@@ -15,9 +15,9 @@ namespace BalancedLife.Application.Services {
         }
 
         public async Task<BodyDTO> Add(BodyDTO body) {
-            if ( body == null ) 
+            if ( body == null )
                 throw new ArgumentNullException(nameof(body), "Body cannot be null.");
-            
+
             try {
                 var bodyEntity = _mapper.Map<Body>(body);
                 var addedBody = await _bodyRepository.Add(bodyEntity);

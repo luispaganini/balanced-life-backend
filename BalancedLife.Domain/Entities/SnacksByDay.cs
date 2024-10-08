@@ -16,8 +16,7 @@ namespace BalancedLife.Domain.Entities {
         public List<Snacks> Snacks { get; set; }
     }
 
-    public class Snacks
-    {
+    public class Snacks {
         public long Id { get; set; }
         public string Title { get; set; }
         public TypeSnack TypeSnacks { get; set; }

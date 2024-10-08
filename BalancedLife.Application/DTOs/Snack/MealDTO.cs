@@ -1,5 +1,4 @@
-﻿using BalancedLife.Domain.Entities;
-using BalancedLife.Domain.Enums;
+﻿using BalancedLife.Domain.Enums;
 
 namespace BalancedLife.Application.DTOs.Snack {
     public class MealDTO {

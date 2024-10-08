@@ -6,8 +6,7 @@ using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
 using System.Text.Json;
 
-namespace BalancedLife.Application.Services
-{
+namespace BalancedLife.Application.Services {
     public class UserService : IUserService {
         private readonly IUserInfoRepository _userRepository;
         private readonly IMapper _mapper;
@@ -30,7 +29,7 @@ namespace BalancedLife.Application.Services
 
                 var userByCpf = await _userRepository.GetByCpf(user.Cpf);
 
-                if ( userByCpf != null && !userByCpf.IsCompleteProfile && user.IsCompleteProfile) {
+                if ( userByCpf != null && !userByCpf.IsCompleteProfile && user.IsCompleteProfile ) {
                     var updateUser = await Update(userByCpf.Id, user);
 
                     return updateUser;
@@ -82,7 +81,7 @@ namespace BalancedLife.Application.Services
 
         public async Task<UserInfoDTO> PatchUpdate(long id, Dictionary<string, object> updates) {
             var user = await _userRepository.GetById(id);
-            if ( user == null ) 
+            if ( user == null )
                 throw new Exception("Usuário não existente");
 
             foreach ( var update in updates ) {

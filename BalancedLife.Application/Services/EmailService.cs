@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
 public class EmailService : IEmailService {
     private readonly SmtpSettings _smtpSettings;

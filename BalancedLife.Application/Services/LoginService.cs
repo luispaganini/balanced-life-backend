@@ -5,11 +5,8 @@ using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Entities;
 using BalancedLife.Domain.Interfaces;
 using BalancedLife.Domain.Utils;
-using System.Security.Claims;
-using System.Text;
 
-namespace BalancedLife.Application.Services
-{
+namespace BalancedLife.Application.Services {
     public class LoginService : ILoginService {
         private readonly IUserInfoRepository _userRepository;
         private readonly IUserService _userService;
@@ -55,8 +52,8 @@ namespace BalancedLife.Application.Services
                 // Log exception
                 throw new ApplicationException("An error occurred while getting the token.", ex);
             }
-        } 
-        
+        }
+
         public async Task UpdateTokenAsync(RefreshToken refreshToken) {
             try {
                 await _refreshRepository.UpdateAsync(refreshToken);

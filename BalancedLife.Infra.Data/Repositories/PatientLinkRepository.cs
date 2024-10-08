@@ -21,7 +21,7 @@ namespace BalancedLife.Infra.Data.Repositories {
 
             if ( existingLink != null )
                 throw new InvalidOperationException("O paciente já está vinculado a este nutricionista.");
-            
+
             _context.UserPatientLinks.Add(user);
             await _context.SaveChangesAsync();
 
@@ -31,7 +31,7 @@ namespace BalancedLife.Infra.Data.Repositories {
         public async Task DeletePatient(long id, long idNutritionist) {
             var user = await _context.UserPatientLinks.FindAsync(id);
 
-            if (user == null ) 
+            if ( user == null )
                 throw new KeyNotFoundException("O link paciente-nutricionista não foi encontrado.");
 
             if ( user.IdNutritionist != idNutritionist )

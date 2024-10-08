@@ -8,8 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace BalancedLife.API.Controllers
-{
+namespace BalancedLife.API.Controllers {
     [Route("api")]
     [ApiController]
     public class LoginController : ControllerBase {
@@ -148,10 +147,10 @@ namespace BalancedLife.API.Controllers
             }; // Simplesmente cria um UserInfoDTO com o ID do usuário
             var tokens = await GenerateTokensAsync(user);
 
-            return new AuthenticationResultDTO { 
-                Success = true, 
-                AccessToken = tokens.AccessToken, 
-                RefreshToken = tokens.RefreshToken, 
+            return new AuthenticationResultDTO {
+                Success = true,
+                AccessToken = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken,
                 AccessTokenExpiration = tokens.AccessTokenExpiration
             };
         }

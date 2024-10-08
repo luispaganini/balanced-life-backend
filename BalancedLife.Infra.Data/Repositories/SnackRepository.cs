@@ -5,7 +5,6 @@ using BalancedLife.Domain.Utils;
 using BalancedLife.Infra.Data.Context;
 using BalancedLife.Infra.Data.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace BalancedLife.Infra.Data.Repositories {
     public class SnackRepository : ISnackRepository {
@@ -163,7 +162,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                 foreach ( var snack in userSnacks ) {
                     foreach ( var nutritionInfo in snack.IdFoodNavigation.FoodNutritionInfos ) {
                         var valuePer100g = nutritionInfo.Quantity ?? 0;
-                        var adjustedValue = 
+                        var adjustedValue =
                             valuePer100g * SnackUtils.ConvertToGrams((double) snack.Quantity, snack.IdUnitMeasurementNavigation.Name) / 100;
 
                         switch ( nutritionInfo.IdNutritionalCompositionNavigation.Item ) {
@@ -237,7 +236,7 @@ namespace BalancedLife.Infra.Data.Repositories {
                 });
             }
 
-            var user = await _context.UserInfos.FindAsync((long)userId);
+            var user = await _context.UserInfos.FindAsync((long) userId);
 
             var snacksByDay = new SnacksByDay {
                 Date = date,

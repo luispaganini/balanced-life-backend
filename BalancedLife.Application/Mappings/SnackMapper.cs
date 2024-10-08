@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BalancedLife.Application.DTOs.Snack;
 using BalancedLife.Domain.Entities;
-using BalancedLife.Domain.Enums;
 
 namespace BalancedLife.Application.Mappings {
     public class SnackMapper : Profile {
@@ -70,7 +69,7 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.IdMeal, opt => opt.MapFrom(src => src.IdMeal))
                 .ForMember(src => src.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                 .ForMember(src => src.UpdatedBy, opt => opt.MapFrom(src => src.UpdatedBy))
-                .ForMember(dest => dest.IdUnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurement));   
+                .ForMember(dest => dest.IdUnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurement));
 
             CreateMap<MealStatusDTO, MealStatus>()
                 .ForMember(dest => dest.Observation, opt => opt.MapFrom(src => src.Observation))

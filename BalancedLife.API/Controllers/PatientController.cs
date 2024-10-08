@@ -1,5 +1,4 @@
 ﻿using BalancedLife.Application.DTOs.User;
-using BalancedLife.Application.interfaces;
 using BalancedLife.Application.Interfaces;
 using BalancedLife.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +19,18 @@ namespace BalancedLife.API.Controllers {
         [Authorize]
         [HttpGet("user/patients")]
         public async Task<IActionResult> GetPatients(
-            [FromQuery] int page, 
-            [FromQuery] int pageSize, 
-            [FromQuery] string? patientName, 
-            [FromQuery] StatusNutritionist? status) 
-        {
+                [FromQuery] int page = 1,
+                [FromQuery] int pageSize = 25,
+                [FromQuery] string? patientName = null,
+                [FromQuery] string? status = null
+            ) {
             try {
+                StatusNutritionist? parsedStatus = null;
+                if ( !string.IsNullOrEmpty(status) && Enum.TryParse<StatusNutritionist>(status, true, out var statusEnum) ) {
+                    parsedStatus = statusEnum;
+                }
                 var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-                var result = await _patientService.GetPatients(long.Parse(userId), page, pageSize, patientName, status);
+                var result = await _patientService.GetPatients(long.Parse(userId), page, pageSize, patientName, parsedStatus);
                 return Ok(result);
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });

@@ -1,8 +1,7 @@
 ﻿using BalancedLife.Application.DTOs.User;
 using BalancedLife.Domain.Entities;
 
-namespace BalancedLife.Application.Interfaces
-{
+namespace BalancedLife.Application.Interfaces {
     public interface ILoginService {
         Task<UserInfoDTO> Login(string cpf, string password);
         Task<UserInfoDTO> VerifyCPF(string cpf);
