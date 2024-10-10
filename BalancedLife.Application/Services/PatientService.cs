@@ -32,6 +32,12 @@ namespace BalancedLife.Application.Services {
             return _mapper.Map<IEnumerable<PatientDTO>>(patients);
         }
 
+        public async Task<int> GetNumberPagePatients(long id, int pageSize, string? patientName, StatusNutritionist? status) {
+            var numberPage = await _userRepository.GetNumberPagePatients(id, pageSize, patientName, status);
+
+            return numberPage;
+        }
+
         public async Task<PatientLinkDTO> GetPatientLinkById(long id) {
             var patient = await _patientRepository.GetPatientById(id);
             return _mapper.Map<PatientLinkDTO>(patient);

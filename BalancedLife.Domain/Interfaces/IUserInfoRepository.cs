@@ -9,5 +9,6 @@ namespace BalancedLife.Domain.Interfaces {
         Task<UserInfo> GetById(long id);
         Task<UserInfo> Update(UserInfo user);
         Task<IEnumerable<Patient>> GetPatients(long id, int pageNumber, int pageSize, string? patientName, StatusNutritionist? status);
+        Task<int> GetNumberPagePatients(long id, int pageSize, string? patientName, StatusNutritionist? status);
     }
 }

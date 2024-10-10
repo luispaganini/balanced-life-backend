@@ -73,6 +73,18 @@ namespace BalancedLife.Infra.Data.Repositories {
             return patients;
         }
 
+        public async Task<int> GetNumberPagePatients(long id, int pageSize, string? patientName, StatusNutritionist? status) {
+            var count = await (from up in _context.UserPatientLinks
+                               join us in _context.UserInfos on up.IdPatient equals us.Id
+                               where up.IdNutritionist == id
+                               && (patientName == null || us.Name.Contains(patientName))
+                               && (status == null || up.LinkStatus == (int) status)
+                               select up)
+                                .CountAsync();
+
+            return (int) Math.Ceiling((double) count / pageSize);
+        }
+
         public async Task<UserInfo> Update(UserInfo user) {
             _context.UserInfos.Update(user);
             await _context.SaveChangesAsync();

@@ -12,6 +12,7 @@ namespace BalancedLife.Application.Interfaces {
         Task<PatientVerifyDTO> IsYourPatientByPatientId(long idNutritionist, long idPatient);
         Task<IEnumerable<NutritionistLinkPatientDTO>> GetNutritionistsByPatientId(long idPatient);
         Task<UserInfoDTO> GetActualNutritionist(long idPatient);
+        Task<int> GetNumberPagePatients(long id, int pageSize, string? patientName, StatusNutritionist? status);
 
     }
 }
