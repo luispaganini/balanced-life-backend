@@ -2,6 +2,7 @@
 using BalancedLife.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace BalancedLife.API.Controllers {
     [Route("api")]
@@ -29,12 +30,19 @@ namespace BalancedLife.API.Controllers {
         }
 
         [HttpGet("food/search/{food}/{pageNumber}")]
-        public async Task<IActionResult> FindFoodBySearch(string food, int pageNumber, [FromQuery] int pageSize = 10) {
+        public async Task<IActionResult> FindFoodBySearch(
+            string food,
+            int pageNumber,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string tables = null)
+        {
             try {
-                var result = await _foodService.FindFoodBySearch(food, pageNumber, pageSize);
-                if ( result == null )
-                    return NotFound(new { message = "Alimento não encontrado." });
 
+                var tableIds = ParseTableIds(tables);
+                var result = await _foodService.FindFoodBySearch(food, pageNumber, pageSize, tableIds);
+
+                if ( result == null || !result.Any() ) 
+                    return NotFound(new { message = "Alimento não encontrado." });
 
                 return Ok(result);
             } catch ( Exception ex ) {
@@ -79,6 +87,25 @@ namespace BalancedLife.API.Controllers {
             } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
+        }
+
+        /// <summary>
+        /// Converte a string de tabelas em uma lista de IDs válidos.
+        /// </summary>
+        /// <param name="tables">String com os IDs separados por vírgulas.</param>
+        /// <returns>Lista de IDs válidos ou null se houver erro de parsing.</returns>
+        private List<int> ParseTableIds(string tables) {
+            if ( string.IsNullOrEmpty(tables) )
+                return null;
+
+            var tableIds = tables
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(id => int.TryParse(id, out var parsedId) ? parsedId : (int?) null)
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+            return tableIds.Any() ? tableIds : null;
         }
 
     }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BalancedLife.Infra.Data.Repositories {
     public class FoodRepository : IFoodRepository {
         private readonly ApplicationDbContext _context;
+        private static List<long>? _nutritionalCompositionIds;
 
         public FoodRepository(ApplicationDbContext context) {
             _context = context;
@@ -37,18 +38,42 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
 
-        public async Task<IEnumerable<Food>> FindFoodBySearch(string food, int pageNumber, int pageSize) {
-            var foods = await _context.Foods
-                .Where(f => f.Name.ToLower().Contains(food.ToLower()))
-                .ToListAsync();  // Carrega todos os resultados para a memória
+        public async Task<IEnumerable<Food>> FindFoodBySearch(
+            string food,
+            int pageNumber,
+            int pageSize,
+            List<int> tables) {
+            if ( _nutritionalCompositionIds == null )
+                _nutritionalCompositionIds = await GetNutritionalCompositionIdsAsync(new[] { "Proteína", "Carboidrato total", "Lipídios", "Energia" });
 
-            var sortedFoods = foods
-                .OrderBy(f => f.Name.StartsWith(food, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
-                .ThenBy(f => f.Name)
+            food = food.ToLower();
+
+            var query = _context.Foods
+                .Where(f => f.Name.ToLower().Contains(food))
+                .OrderBy(f => f.Name.ToLower().StartsWith(food) ? 0 : 1)
+                .ThenBy(f => f.Name);
+
+            if ( tables != null && tables.Any() ) 
+                query = (IOrderedQueryable<Food>) query.Where(f => tables.Contains(f.ReferenceTable.Id));
+            
+            var foods = await query
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
+                .Take(pageSize)
+                .Include(f => f.FoodNutritionInfos.Where(fni => _nutritionalCompositionIds.Contains((long) fni.IdNutritionalComposition)))
+                .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
+                .Include(f => f.ReferenceTable)
+                .Include(f => f.FoodNutritionInfos)
+                .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
+                .ToListAsync();
 
-            return sortedFoods;
+            return foods;
+        }
+
+        private async Task<List<long>> GetNutritionalCompositionIdsAsync(string[] nutritionalCompositions) {
+            return await _context.NutritionalCompositions
+                .Where(n => nutritionalCompositions.Contains(n.Item))
+                .Select(n => n.Id)
+                .ToListAsync();
         }
 
         public async Task<Food> GetFoodById(int id) {

@@ -13,15 +13,17 @@ public partial class Food
 
     public long? IdFoodGroup { get; set; }
 
-    public string ReferenceTable { get; set; }
-
     public string Brand { get; set; }
+
+    public int? ReferenceTableId { get; set; }
+
+    public int? CreatedBy { get; set; }
 
     public virtual ICollection<FoodNutritionInfo> FoodNutritionInfos { get; set; } = new List<FoodNutritionInfo>();
 
     public virtual FoodGroup IdFoodGroupNavigation { get; set; }
 
-    public virtual ICollection<ItemsPlan> ItemsPlans { get; set; } = new List<ItemsPlan>();
+    public virtual ReferenceTable ReferenceTable { get; set; }
 
     public virtual ICollection<Snack> Snacks { get; set; } = new List<Snack>();
 }

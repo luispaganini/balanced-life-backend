@@ -35,115 +35,115 @@ namespace BalancedLife.API.Controllers {
                     patients = result,
                     quantityPages = await _patientService.GetNumberPagePatients(long.Parse(userId), pageSize, patientName, parsedStatus)
                 });
-        } catch (Exception ex ) {
+            } catch ( Exception ex ) {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
         }
 
         [Authorize]
-[HttpDelete("user/patient/{id}")]
-public async Task<IActionResult> DeletePatient(long id) {
-    try {
-        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-        await _patientService.DeletePatient(id, long.Parse(userId));
+        [HttpDelete("user/patient/{id}")]
+        public async Task<IActionResult> DeletePatient(long id) {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                await _patientService.DeletePatient(id, long.Parse(userId));
 
-        return Ok();
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
-
-[Authorize]
-[HttpPost("user/patient")]
-public async Task<IActionResult> AddPatient([FromBody] PatientLinkDTO patient) {
-    try {
-        var result = await _patientService.AddPatient(patient);
-        if ( result != null ) {
-            return CreatedAtAction(nameof(AddPatient), result);
+                return Ok();
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
         }
 
-        return BadRequest(new { message = "Não foi possível registrar o paciente, por favor verifique os dados!" });
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+        [Authorize]
+        [HttpPost("user/patient")]
+        public async Task<IActionResult> AddPatient([FromBody] PatientLinkDTO patient) {
+            try {
+                var result = await _patientService.AddPatient(patient);
+                if ( result != null ) {
+                    return CreatedAtAction(nameof(AddPatient), result);
+                }
 
-[Authorize]
-[HttpPut("user/patient")]
-public async Task<IActionResult> UpdatePatient([FromBody] PatientLinkDTO patient) {
-    try {
-        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-        if ( patient.IdNutritionist != long.Parse(userId) && patient.IdPatient != long.Parse(userId) )
-            return Unauthorized(new { message = "Você não tem permissão para atualizar este paciente." });
-
-        var result = await _patientService.UpdatePatient(patient);
-        if ( result == null ) {
-            return NotFound(new { message = "Paciente não encontrado." });
+                return BadRequest(new { message = "Não foi possível registrar o paciente, por favor verifique os dados!" });
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
         }
 
-        return Ok(result);
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+        [Authorize]
+        [HttpPut("user/patient")]
+        public async Task<IActionResult> UpdatePatient([FromBody] PatientLinkDTO patient) {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                if ( patient.IdNutritionist != long.Parse(userId) && patient.IdPatient != long.Parse(userId) )
+                    return Unauthorized(new { message = "Você não tem permissão para atualizar este paciente." });
 
-[Authorize]
-[HttpGet("user/patient/{id}/validate")]
-public async Task<IActionResult> IsYourPatient(long id) {
-    try {
-        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
-        var result = await _patientService.IsYourPatient(long.Parse(userId), id);
-        return Ok(result);
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+                var result = await _patientService.UpdatePatient(patient);
+                if ( result == null ) {
+                    return NotFound(new { message = "Paciente não encontrado." });
+                }
 
-[Authorize]
-[HttpGet("user/patient/link/{id}")]
-public async Task<IActionResult> GetPatientLinkById(long id) {
-    try {
-        var result = await _patientService.GetPatientLinkById(id);
-        if ( result == null ) {
-            return NotFound(new { message = "Paciente não encontrado." });
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
         }
 
-        return Ok(result);
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+        [Authorize]
+        [HttpGet("user/patient/{id}/validate")]
+        public async Task<IActionResult> IsYourPatient(long id) {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                var result = await _patientService.IsYourPatient(long.Parse(userId), id);
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
 
-[Authorize]
-[HttpGet("user/nutritionists")]
-public async Task<IActionResult> GetNutritionistsByPatient() {
-    try {
-        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+        [Authorize]
+        [HttpGet("user/patient/link/{id}")]
+        public async Task<IActionResult> GetPatientLinkById(long id) {
+            try {
+                var result = await _patientService.GetPatientLinkById(id);
+                if ( result == null ) {
+                    return NotFound(new { message = "Paciente não encontrado." });
+                }
 
-        if ( string.IsNullOrEmpty(userId) )
-            return Unauthorized(new { message = "Usuário não autorizado." });
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
 
-        var result = await _patientService.GetNutritionistsByPatientId(long.Parse(userId));
-        return Ok(result);
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+        [Authorize]
+        [HttpGet("user/nutritionists")]
+        public async Task<IActionResult> GetNutritionistsByPatient() {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
 
-[Authorize]
-[HttpGet("user/nutritionist")]
-public async Task<IActionResult> GetActualNutritionist() {
-    try {
-        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
 
-        if ( string.IsNullOrEmpty(userId) )
-            return Unauthorized(new { message = "Usuário não autorizado." });
+                var result = await _patientService.GetNutritionistsByPatientId(long.Parse(userId));
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
 
-        var result = await _patientService.GetActualNutritionist(long.Parse(userId));
-        return Ok(result);
-    } catch ( Exception ex ) {
-        return BadRequest(new { message = $"{ex.Message}" });
-    }
-}
+        [Authorize]
+        [HttpGet("user/nutritionist")]
+        public async Task<IActionResult> GetActualNutritionist() {
+            try {
+                var userId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+                if ( string.IsNullOrEmpty(userId) )
+                    return Unauthorized(new { message = "Usuário não autorizado." });
+
+                var result = await _patientService.GetActualNutritionist(long.Parse(userId));
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
     }
 }

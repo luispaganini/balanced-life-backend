@@ -36,10 +36,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[itemsPlan]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[meal]",
          "ObjectType": 0
       },
@@ -52,7 +48,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[planDiet]",
+         "Name": "[dbo].[referenceTable]",
          "ObjectType": 0
       },
       {

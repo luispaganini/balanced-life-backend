@@ -5,10 +5,12 @@
         public string Name { get; set; }
 
         public long? IdFoodGroup { get; set; }
+        public int IdReferenceTable { get; set; }
 
         public string ReferenceTable { get; set; }
 
         public string Brand { get; set; }
         public List<FoodNutritionInfoDTO>? FoodNutritionInfo { get; set; }
+        public long? CreatedBy { get; set; }
     }
 }

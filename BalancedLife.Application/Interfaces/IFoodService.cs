@@ -3,7 +3,7 @@
 namespace BalancedLife.Application.Interfaces {
     public interface IFoodService {
         Task<FoodDTO> Add(FoodDTO food);
-        Task<IEnumerable<FoodDTO>> FindFoodBySearch(string food, int pageNumber, int pageSize);
+        Task<IEnumerable<FoodDTO>> FindFoodBySearch(string food, int pageNumber, int pageSize, List<int> tables);
         Task<FoodDTO> GetFoodById(int id);
         Task<IEnumerable<UnitMeasurementDTO>> GetUnitsMeasurement();
         Task<IEnumerable<NutritionalCompositionDTO>> GetNutritionalCompositions();

@@ -24,15 +24,13 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<FoodNutritionInfo> FoodNutritionInfos { get; set; }
 
-    public virtual DbSet<ItemsPlan> ItemsPlans { get; set; }
-
     public virtual DbSet<Meal> Meals { get; set; }
 
     public virtual DbSet<NutritionalComposition> NutritionalCompositions { get; set; }
 
     public virtual DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
 
-    public virtual DbSet<PlanDiet> PlanDiets { get; set; }
+    public virtual DbSet<ReferenceTable> ReferenceTables { get; set; }
 
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
@@ -107,20 +105,22 @@ public partial class ApplicationDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("brand");
+            entity.Property(e => e.CreatedBy).HasColumnName("createdBy");
             entity.Property(e => e.IdFoodGroup).HasColumnName("idFoodGroup");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.ReferenceTable)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("referenceTable");
+            entity.Property(e => e.ReferenceTableId).HasColumnName("referenceTableId");
 
             entity.HasOne(d => d.IdFoodGroupNavigation).WithMany(p => p.Foods)
                 .HasForeignKey(d => d.IdFoodGroup)
                 .HasConstraintName("food_idfoodgroup_foreign");
+
+            entity.HasOne(d => d.ReferenceTable).WithMany(p => p.Foods)
+                .HasForeignKey(d => d.ReferenceTableId)
+                .HasConstraintName("FK_Food_Reference");
         });
 
         modelBuilder.Entity<FoodGroup>(entity =>
@@ -160,28 +160,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.IdUnitMeasurement)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("foodnutritioninfo_idunitmeasurement_foreign");
-        });
-
-        modelBuilder.Entity<ItemsPlan>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__itemsPla__3213E83F066954A3");
-
-            entity.ToTable("itemsPlan");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.IdFood).HasColumnName("idFood");
-            entity.Property(e => e.IdPlan).HasColumnName("idPlan");
-            entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-            entity.HasOne(d => d.IdFoodNavigation).WithMany(p => p.ItemsPlans)
-                .HasForeignKey(d => d.IdFood)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("itemsplan_idfood_foreign");
-
-            entity.HasOne(d => d.IdPlanNavigation).WithMany(p => p.ItemsPlans)
-                .HasForeignKey(d => d.IdPlan)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("itemsplan_idplan_foreign");
         });
 
         modelBuilder.Entity<Meal>(entity =>
@@ -249,24 +227,18 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_User");
         });
 
-        modelBuilder.Entity<PlanDiet>(entity =>
+        modelBuilder.Entity<ReferenceTable>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__planDiet__3213E83F72D6552F");
+            entity.HasKey(e => e.Id).HasName("PK__referenc__3214EC0722A2BC4E");
 
-            entity.ToTable("planDiet");
+            entity.ToTable("referenceTable");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.IdNutricionist).HasColumnName("idNutricionist");
-            entity.Property(e => e.Name)
+            entity.HasIndex(e => e.ReferenceTable1, "UQ__referenc__75C2E7B17ED6989B").IsUnique();
+
+            entity.Property(e => e.ReferenceTable1)
                 .IsRequired()
                 .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("name");
-
-            entity.HasOne(d => d.IdNutricionistNavigation).WithMany(p => p.PlanDiets)
-                .HasForeignKey(d => d.IdNutricionist)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("plan_idnutricionist_foreign");
+                .HasColumnName("referenceTable");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>

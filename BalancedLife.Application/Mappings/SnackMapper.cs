@@ -24,7 +24,9 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.Food, opt => opt.MapFrom(src => src.IdFoodNavigation))
                 .ForMember(dest => dest.UnitMeasurement, opt => opt.MapFrom(src => src.IdUnitMeasurementNavigation));
             CreateMap<Food, FoodDTO>()
-                .ForMember(dest => dest.FoodNutritionInfo, opt => opt.MapFrom(src => src.FoodNutritionInfos));
+                .ForMember(dest => dest.FoodNutritionInfo, opt => opt.MapFrom(src => src.FoodNutritionInfos))
+                .ForMember(dest => dest.IdReferenceTable, opt => opt.MapFrom(src => src.ReferenceTable.Id))
+                .ForMember(dest => dest.ReferenceTable, opt => opt.MapFrom(src => src.ReferenceTable.ReferenceTable1));
 
             CreateMap<FoodDTO, Food>()
                 .ForMember(dest => dest.FoodNutritionInfos, opt => opt.MapFrom(src => src.FoodNutritionInfo));
@@ -59,6 +61,11 @@ namespace BalancedLife.Application.Mappings {
                 .ForMember(dest => dest.TotalCalories, opt => opt.MapFrom(src => src.TotalCalories))
                 .ForMember(dest => dest.IdMeal, opt => opt.MapFrom(src => src.IdMeal))
                 .ForMember(dest => dest.StatusSnack, opt => opt.MapFrom(src => src.StatusSnack));
+
+            CreateMap<ReferenceTable, ReferenceTableDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ReferenceTable, opt => opt.MapFrom(src => src.ReferenceTable1))
+                .ForMember(dest => dest.Foods, opt => opt.MapFrom(src => src.Foods));   
 
             CreateMap<SnackFullDTO, Snack>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
