@@ -56,6 +56,12 @@ namespace BalancedLife.Application.Services {
             await _snackRepository.UpdateMealStatus(idMeal, mealStatusEntity);
         }
 
+        public async Task<List<ReferenceTableDTO>> GetNutritionalTables() {
+            var result = await _snackRepository.GetNutritionalTables();
+
+            return _mapper.Map<List<ReferenceTableDTO>>(result);
+        }
+
         public async Task<SnackDTO> UpdateSnack(SnackFullDTO snack) {
             var snackEntity = _mapper.Map<Snack>(snack);
             var updatedSnack = await _snackRepository.UpdateSnack(snackEntity);

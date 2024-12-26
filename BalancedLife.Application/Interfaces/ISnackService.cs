@@ -1,4 +1,5 @@
 ﻿using BalancedLife.Application.DTOs.Snack;
+using BalancedLife.Domain.Entities;
 
 namespace BalancedLife.Application.Interfaces {
     public interface ISnackService {
@@ -10,7 +11,7 @@ namespace BalancedLife.Application.Interfaces {
         Task<SnackDTO> AddSnack(SnackFullDTO snack);
         Task<SnackDTO> UpdateSnack(SnackFullDTO snack);
         Task DeleteSnack(long id);
-
+        Task<List<ReferenceTableDTO>> GetNutritionalTables();
 
     }
 }

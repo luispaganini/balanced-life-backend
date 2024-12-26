@@ -43,6 +43,12 @@ namespace BalancedLife.Infra.Data.Repositories {
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<ReferenceTable>> GetNutritionalTables() {
+            var tables = await _context.ReferenceTables.ToListAsync();
+
+            return tables;
+        }
+
         public async Task<MealInfo> GetMealById(int idMeal, int idTypeSnack, int idUser) {
             var carbohydrates = 0.0;
             var calories = 0.0;

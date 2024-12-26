@@ -10,5 +10,6 @@ namespace BalancedLife.Domain.Interfaces {
         Task<Snack> UpdateSnack(Snack snack);
         Task DeleteSnack(long id);
         Task UpdateMealStatus(long idMeal, MealStatus mealStatus);
+        Task<List<ReferenceTable>> GetNutritionalTables();
     }
 }

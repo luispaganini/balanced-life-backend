@@ -138,5 +138,18 @@ namespace BalancedLife.API.Controllers {
                 return BadRequest(new { message = $"{ex.Message}" });
             }
         }
+
+        [HttpGet("snack/tables")]
+        public async Task<IActionResult> GetTables() {
+            try {
+                var result = await _snackService.GetNutritionalTables();
+                if ( result == null )
+                    return NotFound(new { message = "Tabelas não encontradas." });
+
+                return Ok(result);
+            } catch ( Exception ex ) {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+        }
     }
 }
