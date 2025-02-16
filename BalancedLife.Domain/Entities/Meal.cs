@@ -19,6 +19,12 @@ public partial class Meal
 
     public long? IdTypeSnack { get; set; }
 
+    public bool? IsTemplate { get; set; }
+
+    public long? IdDiet { get; set; }
+
+    public virtual Diet IdDietNavigation { get; set; }
+
     public virtual TypeSnack IdTypeSnackNavigation { get; set; }
 
     public virtual UserInfo IdUserNavigation { get; set; }

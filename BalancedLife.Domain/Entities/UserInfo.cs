@@ -49,6 +49,10 @@ public partial class UserInfo
 
     public virtual ICollection<Body> Bodies { get; set; } = new List<Body>();
 
+    public virtual ICollection<Diet> DietIdNutritionistNavigations { get; set; } = new List<Diet>();
+
+    public virtual ICollection<Diet> DietIdPatientNavigations { get; set; } = new List<Diet>();
+
     public virtual City IdCityNavigation { get; set; }
 
     public virtual UserRole IdUserRoleNavigation { get; set; }

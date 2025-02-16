@@ -38,7 +38,7 @@ namespace BalancedLife.Infra.Data.Repositories {
         }
 
 
-        public async Task<IEnumerable<Food>> FindFoodBySearch(
+        public async Task<(IEnumerable<Food> Foods, int TotalPages)> FindFoodBySearch(
             string food,
             int pageNumber,
             int pageSize,
@@ -49,14 +49,17 @@ namespace BalancedLife.Infra.Data.Repositories {
             food = food.ToLower();
 
             var query = _context.Foods
-                .Where(f => f.Name.ToLower().Contains(food))
-                .OrderBy(f => f.Name.ToLower().StartsWith(food) ? 0 : 1)
-                .ThenBy(f => f.Name);
+                .Where(f => f.Name.ToLower().Contains(food));
 
-            if ( tables != null && tables.Any() ) 
-                query = (IOrderedQueryable<Food>) query.Where(f => tables.Contains(f.ReferenceTable.Id));
-            
+            if ( tables != null && tables.Any() )
+                query = query.Where(f => tables.Contains(f.ReferenceTable.Id));
+
+            int totalCount = await query.CountAsync();
+            int totalPages = (int) Math.Ceiling(totalCount / (double) pageSize);
+
             var foods = await query
+                .OrderBy(f => f.Name.ToLower().StartsWith(food) ? 0 : 1)
+                .ThenBy(f => f.Name)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Include(f => f.FoodNutritionInfos.Where(fni => _nutritionalCompositionIds.Contains((long) fni.IdNutritionalComposition)))
@@ -66,8 +69,9 @@ namespace BalancedLife.Infra.Data.Repositories {
                 .ThenInclude(fni => fni.IdNutritionalCompositionNavigation)
                 .ToListAsync();
 
-            return foods;
+            return (foods, totalPages);
         }
+
 
         private async Task<List<long>> GetNutritionalCompositionIdsAsync(string[] nutritionalCompositions) {
             return await _context.NutritionalCompositions
@@ -78,6 +82,7 @@ namespace BalancedLife.Infra.Data.Repositories {
 
         public async Task<Food> GetFoodById(int id) {
             var food = await _context.Foods
+                .Include(f => f.ReferenceTable)
                 .Include(f => f.FoodNutritionInfos)
                     .ThenInclude(fni => fni.IdUnitMeasurementNavigation)
                 .Include(f => f.FoodNutritionInfos)

@@ -5,11 +5,15 @@ using System.Collections.Generic;
 
 namespace BalancedLife.Domain.Entities;
 
-public partial class ReferenceTable
+public partial class DietDay
 {
     public int Id { get; set; }
 
-    public string ReferenceTable1 { get; set; }
+    public long IdDiet { get; set; }
 
-    public virtual ICollection<Food> Foods { get; set; } = new List<Food>();
+    public int IdDay { get; set; }
+
+    public virtual DaysOfWeek IdDayNavigation { get; set; }
+
+    public virtual Diet IdDietNavigation { get; set; }
 }

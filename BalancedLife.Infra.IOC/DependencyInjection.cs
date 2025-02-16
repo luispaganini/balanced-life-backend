@@ -26,6 +26,7 @@ namespace BalancedLife.Infra.IOC {
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
             services.AddScoped<IPatientRepository, PatientLinkRepository>();
+            services.AddScoped<IDietRepository, DietRepository>();
 
             // Registro de serviços de aplicação
             services.AddScoped<IFoodService, FoodService>();
@@ -35,6 +36,7 @@ namespace BalancedLife.Infra.IOC {
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IPasswordResetService, PasswordResetService>();
             services.AddScoped<IPatientService, PatientService>();
+            services.AddScoped<IDietService, DietService>();
 
             // Registro do AutoMapper
             services.AddAutoMapper(typeof(UserMapper));

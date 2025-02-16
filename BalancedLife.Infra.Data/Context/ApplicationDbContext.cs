@@ -18,6 +18,12 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<City> Cities { get; set; }
 
+    public virtual DbSet<DaysOfWeek> DaysOfWeeks { get; set; }
+
+    public virtual DbSet<Diet> Diets { get; set; }
+
+    public virtual DbSet<DietDay> DietDays { get; set; }
+
     public virtual DbSet<Food> Foods { get; set; }
 
     public virtual DbSet<FoodGroup> FoodGroups { get; set; }
@@ -92,6 +98,74 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.IdState)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("city_idstate_foreign");
+        });
+
+        modelBuilder.Entity<DaysOfWeek>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__daysOfWe__3213E83F26556E2A");
+
+            entity.ToTable("daysOfWeek");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DayName)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("dayName");
+            entity.Property(e => e.ShortName)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasColumnName("shortName");
+        });
+
+        modelBuilder.Entity<Diet>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__diets__3213E83F420CFA32");
+
+            entity.ToTable("diets");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("createdAt");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.IdNutritionist).HasColumnName("idNutritionist");
+            entity.Property(e => e.IdPatient).HasColumnName("idPatient");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("name");
+
+            entity.HasOne(d => d.IdNutritionistNavigation).WithMany(p => p.DietIdNutritionistNavigations)
+                .HasForeignKey(d => d.IdNutritionist)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Diets_Nutritionist");
+
+            entity.HasOne(d => d.IdPatientNavigation).WithMany(p => p.DietIdPatientNavigations)
+                .HasForeignKey(d => d.IdPatient)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Diets_Patient");
+        });
+
+        modelBuilder.Entity<DietDay>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__dietDays__3213E83FF2222B2A");
+
+            entity.ToTable("dietDays");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdDay).HasColumnName("idDay");
+            entity.Property(e => e.IdDiet).HasColumnName("idDiet");
+
+            entity.HasOne(d => d.IdDayNavigation).WithMany(p => p.DietDays)
+                .HasForeignKey(d => d.IdDay)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DietDays_Days");
+
+            entity.HasOne(d => d.IdDietNavigation).WithMany(p => p.DietDays)
+                .HasForeignKey(d => d.IdDiet)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DietDays_Diets");
         });
 
         modelBuilder.Entity<Food>(entity =>
@@ -172,10 +246,16 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Appointment)
                 .HasColumnType("datetime")
                 .HasColumnName("appointment");
+            entity.Property(e => e.IdDiet).HasColumnName("idDiet");
             entity.Property(e => e.IdTypeSnack).HasColumnName("idTypeSnack");
             entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IsTemplate).HasColumnName("isTemplate");
             entity.Property(e => e.Observation).HasColumnName("observation");
             entity.Property(e => e.Status).HasColumnName("status");
+
+            entity.HasOne(d => d.IdDietNavigation).WithMany(p => p.Meals)
+                .HasForeignKey(d => d.IdDiet)
+                .HasConstraintName("FK_NomeDaTabela_Diets");
 
             entity.HasOne(d => d.IdTypeSnackNavigation).WithMany(p => p.Meals)
                 .HasForeignKey(d => d.IdTypeSnack)

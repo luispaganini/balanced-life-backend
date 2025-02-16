@@ -24,6 +24,18 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[daysOfWeek]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[dietDays]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[diets]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[food]",
          "ObjectType": 0
       },

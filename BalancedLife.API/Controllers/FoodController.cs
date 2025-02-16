@@ -41,7 +41,7 @@ namespace BalancedLife.API.Controllers {
                 var tableIds = ParseTableIds(tables);
                 var result = await _foodService.FindFoodBySearch(food, pageNumber, pageSize, tableIds);
 
-                if ( result == null || !result.Any() ) 
+                if ( result == null || !result.Foods.Any() ) 
                     return NotFound(new { message = "Alimento não encontrado." });
 
                 return Ok(result);
